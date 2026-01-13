@@ -23,8 +23,8 @@ CREATE TABLE vehiculos (
     estado VARCHAR(20) NOT NULL DEFAULT 'DISPONIBLE' -- DISPONIBLE, EN_VIAJE, MANTENIMIENTO
 );
 
--- 4. Tabla de Choferes
-CREATE TABLE choferes (
+-- 4. Tabla de Conductores
+CREATE TABLE conductores (
     id BIGSERIAL PRIMARY KEY,
     dni VARCHAR(15) UNIQUE NOT NULL,
     nombre VARCHAR(150) NOT NULL,
