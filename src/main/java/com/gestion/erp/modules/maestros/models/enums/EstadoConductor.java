@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum EstadoConductor {
 
     DISPONIBLE("El conductor está listo para ser asignado a un viaje"),
-    OCUPADO("El conductor se encuentra actualmente en ruta");
+    OCUPADO("El conductor se encuentra actualmente en ruta"),
+    LICENCIA_VENCIDA("El conductor no puede operar debido a la expiración de su licencia");
     
     private final String descripcion;
 }
