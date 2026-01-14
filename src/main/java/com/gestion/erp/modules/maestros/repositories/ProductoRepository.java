@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
     // Buscador útil para validar nombres duplicados antes de insertar
     Optional<Producto> findByNombre(String nombre);
+    boolean existsByNombreIgnoreCase(String nombre);
 }

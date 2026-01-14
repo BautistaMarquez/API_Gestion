@@ -2,6 +2,7 @@ package com.gestion.erp.modules.maestros.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+
 import java.util.List;
 
 
@@ -15,4 +16,9 @@ public record ProductoRequestDTO(
 
     @NotEmpty(message = "Debe asignar al menos un precio inicial")
     List<PrecioInicialDTO> precios
-) {}
+    
+) {
+    public String getNombre() {
+        return this.nombre;
+    }
+}
