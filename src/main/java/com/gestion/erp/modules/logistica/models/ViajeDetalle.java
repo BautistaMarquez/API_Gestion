@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
 import com.gestion.erp.shared.models.BaseEntity;
+import com.gestion.erp.exception.BusinessException;
 import com.gestion.erp.modules.maestros.models.Producto;
 
 @Entity
@@ -35,4 +36,13 @@ public class ViajeDetalle extends BaseEntity {
 
     @Column(name = "precio_aplicado", nullable = false)
     private BigDecimal precioAplicado; // El Snapshot del momento del viaje
+
+    public void liquidar(Integer cantidadFinal) {
+        if (cantidadFinal < 0 || cantidadFinal > this.cantidadInicial) {
+            throw new BusinessException("Cantidad final inválida para " + this.producto.getNombre());
+        }
+        this.cantidadFinal = cantidadFinal;
+        int unidadesVendidas = this.cantidadInicial - cantidadFinal;
+        this.ventaRealizada = this.precioAplicado.multiply(BigDecimal.valueOf(unidadesVendidas));
+    }
 }

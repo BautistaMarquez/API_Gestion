@@ -7,7 +7,10 @@ import java.util.List;
 
 import com.gestion.erp.modules.maestros.models.Conductor;
 import com.gestion.erp.modules.maestros.models.Vehiculo;
+import com.gestion.erp.modules.maestros.models.enums.EstadoConductor;
+import com.gestion.erp.modules.maestros.models.enums.EstadoVehiculo;
 import com.gestion.erp.shared.models.BaseEntity;
+import com.gestion.erp.exception.BusinessException;
 import com.gestion.erp.modules.auth.models.Usuario;
 import com.gestion.erp.modules.logistica.models.enums.EstadoViaje;
 import java.math.BigDecimal;
@@ -59,4 +62,19 @@ public class Viaje extends BaseEntity {
     
     @Version
     private Long version;
+
+    public ViajeDetalle obtenerDetalle(Long detalleId) {
+    return this.detalles.stream()
+        .filter(d -> d.getId().equals(detalleId))
+        .findFirst()
+        .orElseThrow(() -> new BusinessException("El detalle solicitado no pertenece a este viaje"));
+    }
+
+    public void finalizar() {
+    this.fechaFin = LocalDateTime.now();
+    this.estado = EstadoViaje.FINALIZADO;
+    // Liberamos recursos
+    this.vehiculo.setEstado(EstadoVehiculo.DISPONIBLE);
+    this.conductor.setEstado(EstadoConductor.DISPONIBLE);
+    }
 }

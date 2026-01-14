@@ -1,1 +1,6 @@
 ./mvnw clean compile
+
+Seguimos con: 
+El Controller: Crear el endpoint PATCH o POST /api/v1/viajes/finalizar para que el frontend pueda ejecutar esta lógica.
+
+Seguridad (Auth): Implementar el Login para obtener el supervisorId automáticamente del token y no tener que pasarlo por el JSON (que es un riesgo de seguridad).
