@@ -6,5 +6,5 @@ import com.gestion.erp.modules.auth.models.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    
+    boolean existsByMailIgnoreCase(String mail);
 }

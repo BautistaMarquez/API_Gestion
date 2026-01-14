@@ -5,5 +5,5 @@ import com.gestion.erp.modules.maestros.models.Equipo;
 
 @Repository
 public interface EquipoRepository extends JpaRepository<Equipo, Long> {
-    
+    boolean existsByNombreIgnoreCase(String nombre);
 }
