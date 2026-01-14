@@ -1,12 +1,17 @@
 package com.gestion.erp.modules.logistica.services;
 
 import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gestion.erp.exception.*;
 import com.gestion.erp.modules.logistica.dtos.*;
 import com.gestion.erp.modules.logistica.models.*;
+import com.gestion.erp.modules.logistica.models.enums.EstadoViaje;
 import com.gestion.erp.modules.logistica.repositories.*;
 import com.gestion.erp.modules.logistica.mappers.ViajeMapper; // Inyectamos el mapper
 import com.gestion.erp.modules.maestros.models.*;
@@ -25,7 +30,7 @@ public class ViajeService {
     private final ProductoRepository productoRepository;
     private final ProductoPrecioRepository precioRepository;
     private final UsuarioRepository usuarioRepository;
-    private final ViajeMapper viajeMapper; // Nuestro nuevo aliado
+    private final ViajeMapper viajeMapper;
 
     @Transactional
     public ViajeResponseDTO registrarInicioViaje(ViajeRequestDTO request) {
@@ -97,5 +102,56 @@ public class ViajeService {
             throw new ResourceConflictException("El conductor " + c.getNombre() + " no está disponible");
         }
         return c;
+    }
+
+    @Transactional
+    public ViajeResponseDTO finalizarViaje(ViajeCierreRequestDTO request) {
+        // 1. Validar existencia y estado del viaje
+        Viaje viaje = viajeRepository.findById(request.viajeId())
+            .orElseThrow(() -> new EntityNotFoundException("Viaje no encontrado"));
+
+        if (viaje.getEstado() != EstadoViaje.EN_PROCESO) {
+            throw new ResourceConflictException("Solo se pueden finalizar viajes que estén EN_PROCESO");
+        }
+
+        // 2. Procesar la liquidación de cada producto
+        BigDecimal ventaTotalAcumulada = BigDecimal.ZERO;
+
+        for (DetalleCierreDTO cierreDto : request.detallesFinales()) {
+            // Buscamos el detalle específico dentro de la lista del viaje
+            ViajeDetalle detalle = viaje.getDetalles().stream()
+                .filter(d -> d.getId().equals(cierreDto.detalleId()))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Detalle de viaje ID " + cierreDto.detalleId() + " no pertenece a este viaje"));
+
+            // Validar integridad física: No puede volver más de lo que salió
+            if (cierreDto.cantidadFinal() > detalle.getCantidadInicial()) {
+                throw new BusinessException("Error Contable: La cantidad final (" + cierreDto.cantidadFinal() + 
+                    ") no puede ser mayor a la inicial (" + detalle.getCantidadInicial() + ") para el producto " + detalle.getProducto().getNombre());
+            }
+
+            // --- LÓGICA CONTABLE ---
+            int unidadesVendidas = detalle.getCantidadInicial() - cierreDto.cantidadFinal();
+            BigDecimal ventaLinea = detalle.getPrecioAplicado().multiply(BigDecimal.valueOf(unidadesVendidas));
+
+            // Actualizar el detalle
+            detalle.setCantidadFinal(cierreDto.cantidadFinal());
+            detalle.setVentaRealizada(ventaLinea);
+
+            ventaTotalAcumulada = ventaTotalAcumulada.add(ventaLinea);
+        }
+
+        // 3. Actualizar cabecera del Viaje
+        viaje.setFechaFin(LocalDateTime.now());
+        viaje.setEstado(EstadoViaje.FINALIZADO);
+        viaje.setVentaTotal(ventaTotalAcumulada);
+
+        // 4. Liberar recursos (Importante para la disponibilidad del siguiente turno)
+        viaje.getVehiculo().setEstado(EstadoVehiculo.DISPONIBLE);
+        viaje.getConductor().setEstado(EstadoConductor.DISPONIBLE);
+
+        // 5. Persistir y devolver respuesta aplanada
+        Viaje guardado = viajeRepository.save(viaje);
+        return viajeMapper.toResponseDTO(guardado);
     }
 }
