@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import com.gestion.erp.shared.models.BaseEntity;
 import com.gestion.erp.modules.auth.models.enums.RolUsuario;
+import com.gestion.erp.modules.maestros.models.Equipo;
 
 @Entity
 @Table(name = "usuarios")
@@ -28,4 +29,8 @@ public class Usuario extends BaseEntity {
     private RolUsuario rol; // ADMIN, SUPERVISOR, ADMINISTRATIVO, etc.
 
     private Boolean activo = true;
+
+    // "mappedBy" le dice a JPA que el dueño de la relación es el campo "supervisor" en la clase Equipo
+    @OneToOne(mappedBy = "SUPERVISOR", fetch = FetchType.LAZY)
+    private Equipo equipo;
 }

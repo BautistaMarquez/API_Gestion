@@ -34,4 +34,7 @@ public class Conductor extends BaseEntity {
     @Column(nullable = false)
     @Builder.Default
     private EstadoConductor estado = EstadoConductor.DISPONIBLE;
+
+    @Version
+    private Long version;
 }

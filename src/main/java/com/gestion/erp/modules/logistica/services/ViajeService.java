@@ -20,6 +20,8 @@ import com.gestion.erp.modules.logistica.repositories.*;
 import com.gestion.erp.modules.maestros.models.*;
 import com.gestion.erp.modules.maestros.models.enums.*;
 import com.gestion.erp.modules.maestros.repositories.*;
+import com.gestion.erp.modules.auth.models.Usuario;
+import com.gestion.erp.modules.auth.repositories.UsuarioRepository;
 
 @Service
 @RequiredArgsConstructor

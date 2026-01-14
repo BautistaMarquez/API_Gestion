@@ -1,6 +1,7 @@
 package com.gestion.erp.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -51,5 +52,14 @@ public class GlobalExceptionHandler {
         // En producción, aquí deberías loguear el stacktrace para auditoría
         ErrorResponse error = new ErrorResponse("ERROR_INTERNO", "Ha ocurrido un error inesperado en el servidor");
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<ErrorResponse> handleOptimisticLocking(ObjectOptimisticLockingFailureException ex) {
+        ErrorResponse error = new ErrorResponse(
+        "CONCURRENCIA_ERROR",
+        "El recurso (vehículo o conductor) fue modificado por otro usuario. Por favor, refresca la página e intenta de nuevo."
+    );
+    return new ResponseEntity<>(error, HttpStatus.CONFLICT); // 409 Conflict
     }
 }

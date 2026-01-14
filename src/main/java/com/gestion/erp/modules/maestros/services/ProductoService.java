@@ -24,7 +24,6 @@ public class ProductoService {
         // Mapeo Manual (Por ahora, luego usaremos MapStruct)
         Producto nuevoProducto = Producto.builder()
                 .nombre(dto.nombre())
-                .precioUnitario(dto.precioUnitario())
                 .build();
 
         Producto guardado = productoRepository.save(nuevoProducto);
@@ -32,8 +31,7 @@ public class ProductoService {
         // Retornamos el DTO de respuesta
         return new ProductoResponseDTO(
                 guardado.getId(), 
-                guardado.getNombre(), 
-                guardado.getPrecioUnitario()
+                guardado.getNombre()
         );
     }
 

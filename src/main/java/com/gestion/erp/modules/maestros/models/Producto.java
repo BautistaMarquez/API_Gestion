@@ -1,12 +1,11 @@
 package com.gestion.erp.modules.maestros.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.gestion.erp.shared.models.BaseEntity;
 
@@ -27,8 +26,17 @@ public class Producto extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String nombre;
 
-    @NotNull(message = "El precio unitario no puede ser nulo")
-    @DecimalMin(value = "0.01", message = "El precio debe ser mayor a cero")
-    @Column(name = "precio_unitario", nullable = false, precision = 12, scale = 2)
-    private BigDecimal precioUnitario;
+    // Relación Bidireccional: Un producto tiene muchos precios (Tarifario)
+    // mappedBy: indica que el campo "producto" en la clase ProductoPrecio es el dueño de la relación
+    // cascade: si guardas un producto con precios nuevos, se guardan automáticamente
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ProductoPrecio> precios = new ArrayList<>();
+
+    // Helper Method
+    // Facilita la sincronización de ambos lados de la relación
+    public void addPrecio(ProductoPrecio precio) {
+        precios.add(precio);
+        precio.setProducto(this);
+    }
 }

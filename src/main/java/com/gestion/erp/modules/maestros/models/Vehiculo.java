@@ -26,4 +26,7 @@ public class Vehiculo extends BaseEntity {
     @Column(nullable = false)
     @Builder.Default
     private EstadoVehiculo estado = EstadoVehiculo.DISPONIBLE;
+
+    @Version
+    private Long version;
 }

@@ -10,6 +10,7 @@ import com.gestion.erp.modules.maestros.models.Vehiculo;
 import com.gestion.erp.shared.models.BaseEntity;
 import com.gestion.erp.modules.auth.models.Usuario;
 import com.gestion.erp.modules.logistica.models.enums.EstadoViaje;
+import java.math.BigDecimal;
 
 import java.util.ArrayList;
 
@@ -48,8 +49,14 @@ public class Viaje extends BaseEntity {
     @JoinColumn(name = "conductor_id")
     private Conductor conductor;
 
+    @Column(name = "venta_total")
+    @Builder.Default
+    private BigDecimal ventaTotal = BigDecimal.ZERO;
+
     @OneToMany(mappedBy = "viaje", cascade = CascadeType.ALL)
     @Builder.Default
     private List<ViajeDetalle> detalles = new ArrayList<>();
     
+    @Version
+    private Long version;
 }
