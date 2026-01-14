@@ -43,8 +43,7 @@ public class ProductoService {
         for (Producto producto : productos) {
             responseList.add(new ProductoResponseDTO(
                     producto.getId(),
-                    producto.getNombre(),
-                    producto.getPrecioUnitario()
+                    producto.getNombre()
             ));
         }
 
