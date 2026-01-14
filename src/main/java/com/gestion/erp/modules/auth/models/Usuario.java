@@ -22,7 +22,10 @@ public class Usuario extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(nullable = false)
     private String apellido;
 
     @Enumerated(EnumType.STRING)
@@ -31,6 +34,6 @@ public class Usuario extends BaseEntity {
     private Boolean activo = true;
 
     // "mappedBy" le dice a JPA que el dueño de la relación es el campo "supervisor" en la clase Equipo
-    @OneToOne(mappedBy = "SUPERVISOR", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "supervisor", fetch = FetchType.LAZY)
     private Equipo equipo;
 }

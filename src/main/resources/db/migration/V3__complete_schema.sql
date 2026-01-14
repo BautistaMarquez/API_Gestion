@@ -68,7 +68,10 @@ CREATE TABLE producto_precios (
 -- 3. VÍNCULOS FALTANTES
 -- =============================================================================
 
--- Relacionamos conductores con equipos (Si no se hizo en V1)
+-- Relacionamos conductores con equipos
+ALTER TABLE conductores 
+    ADD COLUMN equipo_id BIGINT;
+
 ALTER TABLE conductores 
     ADD CONSTRAINT fk_conductor_equipo 
     FOREIGN KEY (equipo_id) REFERENCES equipos(id);

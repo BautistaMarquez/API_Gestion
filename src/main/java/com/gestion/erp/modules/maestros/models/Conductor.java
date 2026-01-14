@@ -26,6 +26,9 @@ public class Conductor extends BaseEntity {
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
 
+    @NotBlank(message = "El apellido es obligatorio")
+    private String apellido;
+
     @NotNull(message = "La fecha de vencimiento de licencia es obligatoria")
     @Column(name = "licencia_vencimiento")
     private LocalDate licenciaVencimiento;
@@ -34,6 +37,10 @@ public class Conductor extends BaseEntity {
     @Column(nullable = false)
     @Builder.Default
     private EstadoConductor estado = EstadoConductor.DISPONIBLE;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipo_id")
+    private Equipo equipo;
 
     @Version
     private Long version;

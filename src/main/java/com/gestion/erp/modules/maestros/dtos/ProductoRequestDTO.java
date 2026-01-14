@@ -1,6 +1,9 @@
 package com.gestion.erp.modules.maestros.dtos;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import java.util.List;
+
 
 /**
  * DTO para la creación y actualización de productos.
@@ -8,5 +11,8 @@ import jakarta.validation.constraints.NotBlank;
  */
 public record ProductoRequestDTO(
     @NotBlank(message = "El nombre es obligatorio")
-    String nombre
+    String nombre,
+
+    @NotEmpty(message = "Debe asignar al menos un precio inicial")
+    List<PrecioInicialDTO> precios
 ) {}

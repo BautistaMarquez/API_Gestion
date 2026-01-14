@@ -26,6 +26,8 @@ public class Producto extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String nombre;
 
+    private Boolean activo;
+
     // Relación Bidireccional: Un producto tiene muchos precios (Tarifario)
     // mappedBy: indica que el campo "producto" en la clase ProductoPrecio es el dueño de la relación
     // cascade: si guardas un producto con precios nuevos, se guardan automáticamente

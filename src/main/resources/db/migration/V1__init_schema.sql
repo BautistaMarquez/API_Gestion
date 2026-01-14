@@ -13,6 +13,7 @@ CREATE TABLE usuarios (
 CREATE TABLE productos (
     id BIGSERIAL PRIMARY KEY,
     nombre VARCHAR(100) UNIQUE NOT NULL, -- Regla #1: Nombre único
+    activo BOOLEAN NOT NULL DEFAULT TRUE -- Regla #2: Producto activo/inactivo
 );
 
 -- 3. Tabla de Vehículos (Logística)
@@ -27,7 +28,8 @@ CREATE TABLE vehiculos (
 CREATE TABLE conductores (
     id BIGSERIAL PRIMARY KEY,
     dni VARCHAR(15) UNIQUE NOT NULL,
-    nombre VARCHAR(150) NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
     licencia_vencimiento DATE NOT NULL,
     estado VARCHAR(20) NOT NULL DEFAULT 'DISPONIBLE'
 );
