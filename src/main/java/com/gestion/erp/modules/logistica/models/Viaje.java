@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.gestion.erp.modules.maestros.models.Conductor;
 import com.gestion.erp.modules.maestros.models.Vehiculo;
+import com.gestion.erp.shared.models.BaseEntity;
 import com.gestion.erp.modules.auth.models.Usuario;
 import com.gestion.erp.modules.logistica.models.enums.EstadoViaje;
 
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Viaje {
+public class Viaje extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

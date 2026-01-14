@@ -1,6 +1,8 @@
 package com.gestion.erp.modules.maestros.models;
 
 import com.gestion.erp.modules.maestros.models.enums.EstadoVehiculo;
+import com.gestion.erp.shared.models.BaseEntity;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -8,7 +10,7 @@ import lombok.*;
 @Entity
 @Table(name = "vehiculos")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Vehiculo {
+public class Vehiculo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

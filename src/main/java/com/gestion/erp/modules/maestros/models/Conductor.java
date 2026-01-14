@@ -3,6 +3,8 @@ package com.gestion.erp.modules.maestros.models;
 import java.time.LocalDate;
 
 import com.gestion.erp.modules.maestros.models.enums.EstadoConductor;
+import com.gestion.erp.shared.models.BaseEntity;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +13,7 @@ import lombok.*;
 @Entity
 @Table(name = "conductores")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Conductor {
+public class Conductor extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

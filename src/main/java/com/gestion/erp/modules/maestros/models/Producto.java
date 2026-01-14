@@ -8,6 +8,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
+import com.gestion.erp.shared.models.BaseEntity;
+
 @Entity
 @Table(name = "productos")
 @Getter
@@ -15,7 +17,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Producto {
+public class Producto extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
