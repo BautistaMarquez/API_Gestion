@@ -10,6 +10,7 @@ import com.gestion.erp.modules.maestros.models.Vehiculo;
 import com.gestion.erp.modules.maestros.models.enums.EstadoConductor;
 import com.gestion.erp.modules.maestros.models.enums.EstadoVehiculo;
 import com.gestion.erp.shared.models.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gestion.erp.exception.BusinessException;
 import com.gestion.erp.modules.auth.models.Usuario;
 import com.gestion.erp.modules.logistica.models.enums.EstadoViaje;
@@ -58,6 +59,7 @@ public class Viaje extends BaseEntity {
 
     @OneToMany(mappedBy = "viaje", cascade = CascadeType.ALL)
     @Builder.Default
+    @JsonManagedReference
     private List<ViajeDetalle> detalles = new ArrayList<>();
     
     @Version

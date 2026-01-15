@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.gestion.erp.exception.EntityNotFoundException;
 import com.gestion.erp.exception.ResourceConflictException;
 import com.gestion.erp.modules.maestros.dtos.VehiculoRequestDTO;
+import com.gestion.erp.modules.maestros.dtos.VehiculoResponseDTO;
 import com.gestion.erp.modules.maestros.models.Vehiculo;
 import com.gestion.erp.modules.maestros.models.enums.EstadoVehiculo;
 import com.gestion.erp.modules.maestros.repositories.VehiculoRepository;
@@ -19,12 +20,16 @@ public class VehiculoService {
     private final VehiculoMapper mapper;
 
     @Transactional
-    public Vehiculo save(VehiculoRequestDTO dto) {
-        if (vehiculoRepository.existsByPatenteIgnoreCase(dto.patente())) {
-            throw new ResourceConflictException("La patente " + dto.patente() + " ya está registrada");
-        }
-        return vehiculoRepository.save(mapper.toEntity(dto));
+public VehiculoResponseDTO save(VehiculoRequestDTO dto) {
+    if (vehiculoRepository.existsByPatenteIgnoreCase(dto.patente())) {
+        throw new ResourceConflictException("La patente " + dto.patente() + " ya está registrada");
     }
+    
+    Vehiculo vehiculo = mapper.toEntity(dto);
+    Vehiculo guardado = vehiculoRepository.save(vehiculo);
+
+    return mapper.toResponseDTO(guardado);
+}
 
     public Vehiculo obtenerParaViaje(Long id) {
         Vehiculo v = vehiculoRepository.findById(id)

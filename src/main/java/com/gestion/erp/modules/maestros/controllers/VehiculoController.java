@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import com.gestion.erp.modules.maestros.dtos.VehiculoRequestDTO;
-import com.gestion.erp.modules.maestros.models.Vehiculo;
+import com.gestion.erp.modules.maestros.dtos.VehiculoResponseDTO;
 import com.gestion.erp.modules.maestros.services.VehiculoService;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,8 @@ public class VehiculoController {
     private final VehiculoService service;
 
     @PostMapping
-    public ResponseEntity<Vehiculo> crear(@Valid @RequestBody VehiculoRequestDTO dto) {
-        return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
+    public ResponseEntity<VehiculoResponseDTO> crear(@Valid @RequestBody VehiculoRequestDTO dto) {
+        VehiculoResponseDTO response = service.save(dto);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

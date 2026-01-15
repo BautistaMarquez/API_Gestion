@@ -27,7 +27,7 @@ public class UsuarioService {
         Usuario usuario = usuarioMapper.toEntity(dto);
 
         // 3. Tratamiento de Seguridad (Punto crítico)
-        // TODO: Implementar passwordEncoder.encode(dto.password()) cuando configuremos Security
+        // Implementar passwordEncoder.encode(dto.password()) cuando configuremos Security
         usuario.setPassword(dto.password()); 
         
         // 4. Persistencia

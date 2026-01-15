@@ -1,5 +1,7 @@
 package com.gestion.erp.modules.maestros.services;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 
 import com.gestion.erp.exception.ResourceConflictException;
@@ -8,6 +10,7 @@ import com.gestion.erp.modules.maestros.dtos.ConductorResponseDTO;
 import com.gestion.erp.modules.maestros.models.Conductor;
 import com.gestion.erp.modules.maestros.models.Equipo;
 import com.gestion.erp.modules.maestros.models.enums.EstadoConductor;
+import com.gestion.erp.exception.BusinessException;
 import com.gestion.erp.exception.EntityNotFoundException;
 import com.gestion.erp.modules.maestros.repositories.ConductorRepository;
 import com.gestion.erp.modules.maestros.repositories.EquipoRepository;
@@ -44,6 +47,11 @@ public class ConductorService {
         if (c.getEstado() != EstadoConductor.DISPONIBLE) {
             throw new ResourceConflictException("El conductor " + c.getNombre() + " no está disponible");
         }
+        // Regla de Oro: Validar vencimiento de licencia
+        if (c.getLicenciaVencimiento().isBefore(LocalDate.now())) {
+            throw new BusinessException("La licencia del conductor " + c.getNombre() + " está vencida");
+        }
+        
         return c;
     }
 }

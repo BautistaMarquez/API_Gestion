@@ -1,6 +1,20 @@
-./mvnw clean compile
+http://localhost:8080/swagger-ui/index.html // Direccion SwaggerUI
+
+./mvnw clean compile    // Limpiar codigo 
+
+./mvnw spring-boot:run  // Correr app
+
 
 Seguimos con: 
-El Controller: Crear el endpoint PATCH o POST /api/v1/viajes/finalizar para que el frontend pueda ejecutar esta lógica.
-
 Seguridad (Auth): Implementar el Login para obtener el supervisorId automáticamente del token y no tener que pasarlo por el JSON (que es un riesgo de seguridad).
+
+Checklist para probar en Swagger:
+POST /api/v1/usuarios: Crea un supervisor (ej: ID 1).
+
+POST /api/v1/equipos: Crea un equipo usando el supervisorId: 1.
+
+POST /api/v1/conductores: Crea un conductor usando el equipoId generado.
+
+POST /api/v1/vehiculos: Crea un camión.
+
+POST /api/v1/productos: Crea tus productos y sus precios (Snapshot).

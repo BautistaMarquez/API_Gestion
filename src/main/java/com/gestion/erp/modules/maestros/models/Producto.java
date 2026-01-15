@@ -7,6 +7,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gestion.erp.shared.models.BaseEntity;
 
 @Entity
@@ -33,6 +34,7 @@ public class Producto extends BaseEntity {
     // cascade: si guardas un producto con precios nuevos, se guardan automáticamente
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @JsonManagedReference
     private List<ProductoPrecio> precios = new ArrayList<>();
 
     // Helper Method

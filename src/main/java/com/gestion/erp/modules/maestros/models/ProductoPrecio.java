@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.gestion.erp.shared.models.BaseEntity;
 
 @Entity
@@ -17,6 +19,7 @@ public class ProductoPrecio extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = false)
+    @JsonBackReference
     private Producto producto;
 
     private String etiqueta; // "Mayorista", "Minorista", "Especial"

@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public record ConductorRequestDTO(
     @NotBlank String nombre,
     @NotBlank String apellido,
-    @NotNull Long dni,
+    @NotBlank String dni,
     @NotNull LocalDate licenciaVencimiento,
     @NotNull Long equipoId
 ) {}

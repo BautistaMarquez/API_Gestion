@@ -1,12 +1,16 @@
 package com.gestion.erp.modules.maestros.mappers;
 
+import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import com.gestion.erp.modules.maestros.dtos.ConductorRequestDTO;
 import com.gestion.erp.modules.maestros.dtos.ConductorResponseDTO;
 import com.gestion.erp.modules.maestros.models.Conductor;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring", 
+    builder = @Builder(disableBuilder = true)
+)
 public interface ConductorMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "estado", constant = "DISPONIBLE")

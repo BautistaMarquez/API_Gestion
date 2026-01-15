@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
 import com.gestion.erp.shared.models.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.gestion.erp.exception.BusinessException;
 import com.gestion.erp.modules.maestros.models.Producto;
 
@@ -19,6 +20,7 @@ public class ViajeDetalle extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "viaje_id", nullable = false)
+    @JsonBackReference
     private Viaje viaje;
 
     @ManyToOne(fetch = FetchType.LAZY)
