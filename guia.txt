@@ -4,6 +4,7 @@ http://localhost:8080/swagger-ui/index.html // Direccion SwaggerUI
 
 ./mvnw spring-boot:run  // Correr app
 
+./mvnw clean install -DskipTests // Limpiar cache de maven y compilar, por si modifico pom. Para limpiar basura de target.
 
 Seguimos con: 
 Seguridad (Auth): Implementar el Login para obtener el supervisorId automáticamente del token y no tener que pasarlo por el JSON (que es un riesgo de seguridad).
