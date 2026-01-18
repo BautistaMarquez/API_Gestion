@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +23,7 @@ public class ViajeController {
      * Creamos un nuevo recurso "Viaje" y devolvemos 201 Created.
      */
     @PostMapping
+    @PreAuthorize("hasAnyRole('SUPERSIVOR_PLANTA','ADMIN','TOTAL')")
     public ResponseEntity<ViajeResponseDTO> iniciarViaje(@Valid @RequestBody ViajeRequestDTO request) {
         ViajeResponseDTO response = viajeService.registrarInicioViaje(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -33,6 +35,7 @@ public class ViajeController {
      * (de EN_PROCESO a FINALIZADO) y completando datos de cierre.
      */
     @PatchMapping("/finalizar")
+    @PreAuthorize("hasAnyRole('SUPERSIVOR_PLANTA','ADMIN','TOTAL')")
     public ResponseEntity<ViajeResponseDTO> finalizarViaje(@Valid @RequestBody ViajeCierreRequestDTO request) {
         ViajeResponseDTO response = viajeService.finalizarViaje(request);
         return ResponseEntity.ok(response);

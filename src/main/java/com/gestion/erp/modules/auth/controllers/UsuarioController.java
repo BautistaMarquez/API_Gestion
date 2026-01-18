@@ -2,6 +2,7 @@ package com.gestion.erp.modules.auth.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ public class UsuarioController {
     private final UsuarioService service;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TOTAL')")
     public ResponseEntity<Usuario> crear(@Valid @RequestBody UsuarioRequestDTO dto) {
         return new ResponseEntity<>(service.registrar(dto), HttpStatus.CREATED);
     }

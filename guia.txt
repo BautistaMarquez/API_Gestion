@@ -26,10 +26,17 @@ Ver GET DE PRODUCTOS, TIRA ERROR 500
 ------------------------------------ * --------------------------
 
 Fase B: Implementación de RBAC (Autorización)
+(
+    Seguridad a nivel de Método: Restringir los controladores según el Rol.
+
+    Contexto de Auditoría: Crear una utilidad para obtener el usuario autenticado.
+
+    Filtrado por Propietario (Data-Level Security): El requerimiento de que el Supervisor solo vea su equipo.
+)
+
 Aquí aplicamos la tabla de permisos que definimos en el análisis de diseño.
 
 Method Security: Usar @PreAuthorize en los Controllers.
-
 
 Ejemplo: Solo SUPERVISOR_PLANTA o TOTAL pueden acceder al POST /api/v1/viajes.
 

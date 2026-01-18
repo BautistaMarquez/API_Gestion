@@ -2,6 +2,7 @@ package com.gestion.erp.modules.maestros.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ public class VehiculoController {
     private final VehiculoService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
     public ResponseEntity<VehiculoResponseDTO> crear(@Valid @RequestBody VehiculoRequestDTO dto) {
         VehiculoResponseDTO response = service.save(dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);

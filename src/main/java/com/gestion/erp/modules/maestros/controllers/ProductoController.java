@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class ProductoController {
      * @return El producto creado con su ID y código 201 Created.
      */
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
     public ResponseEntity<ProductoResponseDTO> crearProducto(@Valid @RequestBody ProductoRequestDTO request) {
         ProductoResponseDTO response = productoService.crearProducto(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -37,6 +39,7 @@ public class ProductoController {
      * Endpoint para obtener el catálogo completo de productos.
      */
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
     public ResponseEntity<List<ProductoResponseDTO>> listarProductos() {
         return ResponseEntity.ok(productoService.listarTodos());
     }
