@@ -24,8 +24,9 @@ POST /api/v1/productos: Crea tus productos y sus precios (Snapshot).
 Ver GET DE PRODUCTOS, TIRA ERROR 500
 
 ------------------------------------ * --------------------------
+Eliminaciones de equipos. 
+Asignacion de conductores y supervisores a equipos
 
-Borrado Lógico,Implementar @DeleteMapping en todos los controllers.,Cambiar activo = false o estado = ELIMINADO.
 
 Paginación,Cambiar List por Pageable en los Services/Repositories.,Escalabilidad del ERP.
 

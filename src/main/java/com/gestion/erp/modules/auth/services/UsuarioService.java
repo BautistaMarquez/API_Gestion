@@ -3,12 +3,16 @@ package com.gestion.erp.modules.auth.services;
 import com.gestion.erp.exception.EntityNotFoundException;
 import com.gestion.erp.exception.ResourceConflictException;
 import com.gestion.erp.modules.auth.dtos.UsuarioRequestDTO;
+import com.gestion.erp.modules.auth.dtos.UsuarioResponseDTO;
 import com.gestion.erp.modules.auth.mappers.UsuarioMapper;
 import com.gestion.erp.modules.auth.models.Usuario;
 import com.gestion.erp.modules.auth.repositories.UsuarioRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +41,7 @@ public class UsuarioService {
         return repository.save(usuario);
     }
 
-        @Transactional
+    @Transactional
     public void eliminarLogico(Long id) {
      // 1. Buscar el producto o lanzar 404
      Usuario usuario = repository.findById(id)
@@ -47,5 +51,11 @@ public class UsuarioService {
      usuario.setActivo(false);
      // 3. Persistir (el @Transactional se encarga del commit)
      repository.save(usuario);
+    }
+
+    public Page<UsuarioResponseDTO> listarPaginado(Pageable pageable) {
+    Page<Usuario> usuarios = repository.findAll(pageable);
+    // La ventaja de Page es que tiene un método .map() muy potente
+    return usuarios.map(usuarioMapper::toResponseDTO);
     }
 }

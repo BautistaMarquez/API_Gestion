@@ -1,6 +1,7 @@
 package com.gestion.erp.modules.auth.mappers;
 
 import com.gestion.erp.modules.auth.dtos.UsuarioRequestDTO;
+import com.gestion.erp.modules.auth.dtos.UsuarioResponseDTO;
 import com.gestion.erp.modules.auth.models.Usuario;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,4 +19,7 @@ public interface UsuarioMapper {
     // El password se mapea automáticamente si el nombre coincide, 
     // luego el Service lo sobreescribirá con el hash.
     Usuario toEntity(UsuarioRequestDTO dto);
+
+    UsuarioRequestDTO toRequestDTO(Usuario entity);
+    UsuarioResponseDTO toResponseDTO(Usuario entity);
 }

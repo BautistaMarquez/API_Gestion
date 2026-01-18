@@ -21,6 +21,9 @@ spring:
     serialization:
       write-dates-as-timestamps: false # Para que salgan como "2026-01-18T..."
     default-property-inclusion: non_null # No enviamos campos nulos para ahorrar ancho de banda
+springdoc:
+  show-login-endpoint: true
+  default-produces-media-type: application/json
 
 # --- PROPIEDADES PERSONALIZADAS DEL SISTEMA (Fuera de 'spring') ---
 application:

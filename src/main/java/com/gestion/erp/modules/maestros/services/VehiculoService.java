@@ -13,7 +13,8 @@ import com.gestion.erp.modules.maestros.models.enums.EstadoVehiculo;
 import com.gestion.erp.modules.maestros.repositories.VehiculoRepository;
 import com.gestion.erp.modules.maestros.mappers.VehiculoMapper;
 import jakarta.transaction.Transactional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 @Service
@@ -59,5 +60,11 @@ public VehiculoResponseDTO save(VehiculoRequestDTO dto) {
 
      // 4. Persistir (el @Transactional se encarga del commit)
      vehiculoRepository.save(vehiculo);
+    }
+
+    public Page<VehiculoResponseDTO> listarPaginado(Pageable pageable) {
+    Page<Vehiculo> vehiculos = vehiculoRepository.findAll(pageable);
+    // La ventaja de Page es que tiene un método .map() muy potente
+    return vehiculos.map(mapper::toResponseDTO);
     }
 }
