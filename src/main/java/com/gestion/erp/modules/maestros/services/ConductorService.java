@@ -2,6 +2,8 @@ package com.gestion.erp.modules.maestros.services;
 
 import java.time.LocalDate;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.gestion.erp.exception.ResourceConflictException;
@@ -70,5 +72,11 @@ public class ConductorService {
 
      // 4. Persistir (el @Transactional se encarga del commit)
      conductorRepository.save(conductor);
+    }
+
+    public Page<ConductorResponseDTO> listarPaginado(Pageable pageable) {
+    Page<Conductor> conductores = conductorRepository.findAll(pageable);
+    // La ventaja de Page es que tiene un método .map() muy potente
+    return conductores.map(mapper::toResponseDTO);
     }
 }

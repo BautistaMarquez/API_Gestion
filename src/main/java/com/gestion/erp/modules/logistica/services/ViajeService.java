@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.gestion.erp.exception.*;
@@ -123,5 +125,11 @@ public class ViajeService {
             detalle.setProducto(producto);
             detalle.setPrecioAplicado(precio.getValor());
         }
+    }
+
+    public Page<ViajeResponseDTO> listarPaginado(Pageable pageable) {
+    Page<Viaje> viajes = viajeRepository.findAll(pageable);
+    // La ventaja de Page es que tiene un método .map() muy potente
+    return viajes.map(viajeMapper::toResponseDTO);
     }
 }

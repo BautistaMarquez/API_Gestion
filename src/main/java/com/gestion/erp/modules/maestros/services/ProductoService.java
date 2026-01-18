@@ -8,6 +8,9 @@ import com.gestion.erp.modules.maestros.repositories.ProductoRepository;
 import com.gestion.erp.exception.EntityNotFoundException;
 import com.gestion.erp.exception.ResourceConflictException;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -57,5 +60,11 @@ public class ProductoService {
 
      // 3. Persistir (el @Transactional se encarga del commit)
      productoRepository.save(producto);
+    }
+
+    public Page<ProductoResponseDTO> listarPaginado(Pageable pageable) {
+        Page<Producto> productos = productoRepository.findAll(pageable);
+        // La ventaja de Page es que tiene un método .map() muy potente
+        return productos.map(productoMapper::toResponseDTO);
     }
 }

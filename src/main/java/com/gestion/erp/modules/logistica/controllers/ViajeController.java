@@ -4,8 +4,14 @@ import com.gestion.erp.modules.logistica.dtos.ViajeCierreRequestDTO;
 import com.gestion.erp.modules.logistica.dtos.ViajeRequestDTO;
 import com.gestion.erp.modules.logistica.dtos.ViajeResponseDTO;
 import com.gestion.erp.modules.logistica.services.ViajeService;
+
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,4 +58,12 @@ public class ViajeController {
         List<ViajeResponseDTO> viajes = viajeService.listarViajes();
         return ResponseEntity.ok(viajes);
     }  
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO')")
+    @Operation(summary = "Listar vehículos con paginación")
+    public ResponseEntity<Page<ViajeResponseDTO>> listarPaginado(
+        @ParameterObject Pageable pageable) { // @ParameterObject ayuda a Swagger a mostrar los campos
+        return ResponseEntity.ok(viajeService.listarPaginado(pageable));
+    }
 }

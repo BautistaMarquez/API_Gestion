@@ -7,6 +7,10 @@ import com.gestion.erp.modules.maestros.services.ProductoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,5 +56,13 @@ public class ProductoController {
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         productoService.eliminarLogico(id);
         return ResponseEntity.noContent().build(); // Devuelve 204
+    }
+
+        @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO')")
+    @Operation(summary = "Listar productos con paginación")
+    public ResponseEntity<Page<ProductoResponseDTO>> listarPaginado(
+        @ParameterObject Pageable pageable) { // @ParameterObject ayuda a Swagger a mostrar los campos
+        return ResponseEntity.ok(productoService.listarPaginado(pageable));
     }
 }

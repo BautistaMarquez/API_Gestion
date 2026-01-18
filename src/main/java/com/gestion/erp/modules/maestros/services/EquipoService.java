@@ -1,5 +1,7 @@
 package com.gestion.erp.modules.maestros.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.gestion.erp.modules.maestros.dtos.EquipoRequestDTO;
@@ -36,5 +38,11 @@ public class EquipoService {
         equipo.setSupervisor(supervisor);
         
         return mapper.toResponseDTO(repository.save(equipo));
+    }
+
+    public Page<EquipoResponseDTO> listarPaginado(Pageable pageable) {
+        Page<Equipo> equipos = repository.findAll(pageable);
+        // La ventaja de Page es que tiene un método .map() muy potente
+        return equipos.map(mapper::toResponseDTO);
     }
 }
