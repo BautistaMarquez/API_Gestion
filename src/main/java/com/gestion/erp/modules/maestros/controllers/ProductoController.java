@@ -3,6 +3,8 @@ package com.gestion.erp.modules.maestros.controllers;
 import com.gestion.erp.modules.maestros.dtos.ProductoRequestDTO;
 import com.gestion.erp.modules.maestros.dtos.ProductoResponseDTO;
 import com.gestion.erp.modules.maestros.services.ProductoService;
+
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,5 +44,13 @@ public class ProductoController {
     @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
     public ResponseEntity<List<ProductoResponseDTO>> listarProductos() {
         return ResponseEntity.ok(productoService.listarTodos());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL')") // Solo roles de alto nivel
+    @Operation(summary = "Borrado lógico de un producto")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        productoService.eliminarLogico(id);
+        return ResponseEntity.noContent().build(); // Devuelve 204
     }
 }

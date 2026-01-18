@@ -31,4 +31,5 @@ public class Vehiculo extends BaseEntity {
 
     @Version
     private Long version;
+    
 }

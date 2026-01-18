@@ -25,7 +25,15 @@ Ver GET DE PRODUCTOS, TIRA ERROR 500
 
 ------------------------------------ * --------------------------
 
-Fase D: Refinamiento de Configuraciones y Documentación
+Borrado Lógico,Implementar @DeleteMapping en todos los controllers.,Cambiar activo = false o estado = ELIMINADO.
+
+Paginación,Cambiar List por Pageable en los Services/Repositories.,Escalabilidad del ERP.
+
+Filtros Pro,Implementar Specification o Query Methods para búsquedas.,"El usuario querrá filtrar ""Viajes de la semana pasada""."
+
+Validaciones Finales,"Revisar que no se pueda ""Eliminar"" un vehículo que esté EN_VIAJE.",Evitar inconsistencias de estado en plena operación.
+
+Swagger Docs,Agregar @Operation y @ApiResponse para documentar errores.,Facilitar la vida al desarrollador Frontend.
 
 Swagger (SpringDoc): Configurar el OpenAPI Bean para que acepte el Header Authorization: Bearer <token> en la UI, permitiéndote probar las HUs estando logueado.
 
