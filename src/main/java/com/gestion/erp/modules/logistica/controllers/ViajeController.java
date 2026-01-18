@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/viajes")
@@ -40,4 +41,15 @@ public class ViajeController {
         ViajeResponseDTO response = viajeService.finalizarViaje(request);
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * Listar Viajes.
+     * Permite listar todos los viajes o filtrar por supervisor según el rol del usuario.
+     */
+    @GetMapping
+    @PreAuthorize("hasAnyRole('SUPERSIVOR','ADMIN','TOTAL')")
+    public ResponseEntity<List<ViajeResponseDTO>> listarViajes() {
+        List<ViajeResponseDTO> viajes = viajeService.listarViajes();
+        return ResponseEntity.ok(viajes);
+    }  
 }

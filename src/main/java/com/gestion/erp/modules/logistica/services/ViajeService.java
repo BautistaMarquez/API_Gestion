@@ -3,9 +3,11 @@ package com.gestion.erp.modules.logistica.services;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.gestion.erp.exception.*;
+import com.gestion.erp.modules.auth.models.Usuario;
 import com.gestion.erp.modules.logistica.dtos.*;
 import com.gestion.erp.modules.logistica.models.*;
 import com.gestion.erp.modules.logistica.models.enums.EstadoViaje;
@@ -16,6 +18,8 @@ import com.gestion.erp.modules.maestros.models.enums.*;
 import com.gestion.erp.modules.maestros.repositories.*;
 import com.gestion.erp.modules.maestros.services.ConductorService;
 import com.gestion.erp.modules.maestros.services.VehiculoService;
+import com.gestion.erp.shared.util.SecurityUtils;
+import java.util.List;
 
 
 @Service
@@ -26,10 +30,23 @@ public class ViajeService {
     private final ConductorService conductorService;
     private final ProductoRepository productoRepository;
     private final ProductoPrecioRepository precioRepository;
+    private final SecurityUtils securityUtils;
     
     // Repositorios y Mappers
     private final ViajeRepository viajeRepository;
     private final ViajeMapper viajeMapper;
+
+    public List<ViajeResponseDTO> listarViajes() {
+        Usuario usuarioActual = securityUtils.getCurrentUser();
+        
+        // Si es SUPERVISOR, filtramos por su ID.
+        if (usuarioActual.getRol().name().equals("SUPERVISOR")) {
+            return viajeRepository.findBySupervisorId(usuarioActual.getId())
+                             .stream().map(viajeMapper::toResponseDTO).toList();
+        }
+        // Sino, ve todo.
+        return viajeRepository.findAll().stream().map(viajeMapper::toResponseDTO).toList();
+    }
 
     @Transactional
     public ViajeResponseDTO registrarInicioViaje(ViajeRequestDTO request) {
