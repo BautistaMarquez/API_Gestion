@@ -1,6 +1,7 @@
 package com.gestion.erp.modules.maestros.models;
 
 import java.time.LocalDate;
+import org.hibernate.annotations.SQLRestriction;
 
 import com.gestion.erp.modules.maestros.models.enums.EstadoConductor;
 import com.gestion.erp.shared.models.BaseEntity;
@@ -13,6 +14,7 @@ import lombok.*;
 @Entity
 @Table(name = "conductores")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@SQLRestriction("estado <> 'ELIMINADO'")
 public class Conductor extends BaseEntity {
 
     @Id

@@ -30,8 +30,6 @@ Fase D: Refinamiento de Configuraciones y Documentación
 Swagger (SpringDoc): Configurar el OpenAPI Bean para que acepte el Header Authorization: Bearer <token> en la UI, permitiéndote probar las HUs estando logueado.
 
 
-Jackson Configuration: Asegurar que la serialización de fechas (LocalDateTime) sea consistente en todos los DTOs.
-
 3. Advertencia de Senior: El "Peligro" del Supervisor_ID
 En tu ViajeRequestDTO actual, estás pidiendo el supervisorId en el JSON de entrada. Riesgo: Un usuario malintencionado con rol SUPERVISOR_PLANTA podría enviar el ID de otro supervisor y registrar un viaje a nombre de un tercero.
 

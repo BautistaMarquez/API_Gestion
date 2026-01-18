@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.SQLRestriction;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gestion.erp.shared.models.BaseEntity;
@@ -17,6 +18,7 @@ import com.gestion.erp.shared.models.BaseEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SQLRestriction("activo = true")
 public class Producto extends BaseEntity {
 
     @Id

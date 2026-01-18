@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @Table(name = "usuarios")
 @Getter @Setter
 @NoArgsConstructor
+@SQLRestriction("activo = true")
 public class Usuario extends BaseEntity implements UserDetails { // Implementamos UserDetails
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

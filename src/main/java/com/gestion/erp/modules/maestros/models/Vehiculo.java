@@ -6,10 +6,12 @@ import com.gestion.erp.shared.models.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "vehiculos")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@SQLRestriction("estado <> 'ELIMINADO'")
 public class Vehiculo extends BaseEntity {
 
     @Id
