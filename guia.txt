@@ -25,12 +25,9 @@ Ver GET DE PRODUCTOS, TIRA ERROR 500
 
 ------------------------------------ * --------------------------
 Eliminaciones de equipos. 
-Asignacion de conductores y supervisores a equipos
-
-
-Paginación,Cambiar List por Pageable en los Services/Repositories.,Escalabilidad del ERP.
 
 Filtros Pro,Implementar Specification o Query Methods para búsquedas.,"El usuario querrá filtrar ""Viajes de la semana pasada""."
+¿Te gustaría que te enseñe a usar Query Methods de Spring Data para hacer estos filtros de forma rápida? Es el último paso antes de decir: "Backend: Misión Cumplida".
 
 Validaciones Finales,"Revisar que no se pueda ""Eliminar"" un vehículo que esté EN_VIAJE.",Evitar inconsistencias de estado en plena operación.
 

@@ -36,6 +36,7 @@ public class ProductoController {
      */
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
+    @Operation(summary = "Crear un nuevo producto")
     public ResponseEntity<ProductoResponseDTO> crearProducto(@Valid @RequestBody ProductoRequestDTO request) {
         ProductoResponseDTO response = productoService.crearProducto(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -46,6 +47,7 @@ public class ProductoController {
      */
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
+    @Operation(summary = "Listar todos los productos")
     public ResponseEntity<List<ProductoResponseDTO>> listarProductos() {
         return ResponseEntity.ok(productoService.listarTodos());
     }
@@ -58,7 +60,7 @@ public class ProductoController {
         return ResponseEntity.noContent().build(); // Devuelve 204
     }
 
-        @GetMapping
+    @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO')")
     @Operation(summary = "Listar productos con paginación")
     public ResponseEntity<Page<ProductoResponseDTO>> listarPaginado(

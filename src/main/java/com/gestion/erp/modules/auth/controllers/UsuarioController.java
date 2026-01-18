@@ -29,6 +29,7 @@ public class UsuarioController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('TOTAL')")
+    @Operation(summary = "Crear un nuevo usuario")
     public ResponseEntity<Usuario> crear(@Valid @RequestBody UsuarioRequestDTO dto) {
         return new ResponseEntity<>(service.registrar(dto), HttpStatus.CREATED);
     }

@@ -31,6 +31,7 @@ public class ViajeController {
      */
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPERSIVOR_PLANTA','ADMIN','TOTAL')")
+    @Operation(summary = "Registrar el inicio de un nuevo viaje")
     public ResponseEntity<ViajeResponseDTO> iniciarViaje(@Valid @RequestBody ViajeRequestDTO request) {
         ViajeResponseDTO response = viajeService.registrarInicioViaje(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -43,6 +44,7 @@ public class ViajeController {
      */
     @PatchMapping("/finalizar")
     @PreAuthorize("hasAnyRole('SUPERSIVOR_PLANTA','ADMIN','TOTAL')")
+    @Operation(summary = "Registrar el final de un viaje")
     public ResponseEntity<ViajeResponseDTO> finalizarViaje(@Valid @RequestBody ViajeCierreRequestDTO request) {
         ViajeResponseDTO response = viajeService.finalizarViaje(request);
         return ResponseEntity.ok(response);
@@ -54,6 +56,7 @@ public class ViajeController {
      */
     @GetMapping
     @PreAuthorize("hasAnyRole('SUPERSIVOR','ADMIN','TOTAL')")
+    @Operation(summary = "Listar todos los viajes")
     public ResponseEntity<List<ViajeResponseDTO>> listarViajes() {
         List<ViajeResponseDTO> viajes = viajeService.listarViajes();
         return ResponseEntity.ok(viajes);

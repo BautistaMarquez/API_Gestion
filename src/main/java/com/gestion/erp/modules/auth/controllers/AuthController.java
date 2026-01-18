@@ -6,6 +6,8 @@ import com.gestion.erp.modules.auth.dtos.UsuarioRequestDTO;
 import com.gestion.erp.modules.auth.models.Usuario;
 import com.gestion.erp.modules.auth.services.AuthService;
 import com.gestion.erp.modules.auth.services.UsuarioService;
+
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +25,13 @@ public class AuthController {
     private final UsuarioService usuarioService;
 
     @PostMapping("/login")
+    @Operation(summary = "Iniciar sesión de un usuario")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Registrar un nuevo usuario")
     public ResponseEntity<Usuario> registrar(@RequestBody UsuarioRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.registrar(dto));
     }

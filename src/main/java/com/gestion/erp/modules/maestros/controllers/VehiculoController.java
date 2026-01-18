@@ -29,6 +29,7 @@ public class VehiculoController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
+    @Operation(summary = "Crear un nuevo vehículo")
     public ResponseEntity<VehiculoResponseDTO> crear(@Valid @RequestBody VehiculoRequestDTO dto) {
         VehiculoResponseDTO response = service.save(dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);

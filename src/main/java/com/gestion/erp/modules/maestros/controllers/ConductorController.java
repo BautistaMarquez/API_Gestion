@@ -29,6 +29,7 @@ public class ConductorController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
+    @Operation(summary = "Crear un nuevo conductor")
     public ResponseEntity<ConductorResponseDTO> crear(@Valid @RequestBody ConductorRequestDTO dto) {
         return new ResponseEntity<>(service.crear(dto), HttpStatus.CREATED);
     }
