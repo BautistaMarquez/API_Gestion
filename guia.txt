@@ -6,8 +6,7 @@ http://localhost:8080/swagger-ui/index.html // Direccion SwaggerUI
 
 ./mvnw clean install -DskipTests // Limpiar cache de maven y compilar, por si modifico pom. Para limpiar basura de target.
 
-Seguimos con: 
-Seguridad (Auth): Implementar el Login para obtener el supervisorId automáticamente del token y no tener que pasarlo por el JSON (que es un riesgo de seguridad).
+--------------------------------*-----------------------------------------
 
 Checklist para probar en Swagger:
 POST /api/v1/usuarios: Crea un supervisor (ej: ID 1).
@@ -19,3 +18,63 @@ POST /api/v1/conductores: Crea un conductor usando el equipoId generado.
 POST /api/v1/vehiculos: Crea un camión.
 
 POST /api/v1/productos: Crea tus productos y sus precios (Snapshot).
+
+--------------------------------*-----------------------------------------
+
+Puntos a realizar: 
+Seguridad (Auth): Implementar el Login para obtener el supervisorId automáticamente del token y no tener que pasarlo por el JSON (que es un riesgo de seguridad).
+
+2. Plan de Acción Ordenado: "Hacia el Cierre del Backend"
+He organizado los puntos de forma cronológica para evitar retrabajos (por ejemplo, no podemos filtrar por "Supervisor actual" si no tenemos el contexto de seguridad funcionando).
+
+Fase A: Cimiento de Seguridad y Autenticación (Prioridad 1)
+Antes de tocar los controladores, el sistema debe saber quién está operando.
+
+Inyección de Dependencias: Agregar spring-boot-starter-security y jjwt al pom.xml. CHECK
+
+
+Configuración de BCrypt: Modificar UsuarioService para hashear el password antes de repository.save(). CHECK
+
+
+Security Config: Crear la clase de configuración para definir qué endpoints son públicos (Login) y cuáles requieren autenticación. CHECK
+
+JWT Provider: Implementar el componente que genera y valida los tokens. CHECK 
+
+Implementamos el login. CHECK
+
+
+Consejo: Asegúrate de que tu GlobalExceptionHandler capture BadCredentialsException para devolver un 401 Unauthorized con un mensaje genérico como "Email o contraseña incorrectos". Nunca digas exactamente qué falló (si el mail o la clave) por seguridad contra ataques de enumeración.
+
+Fase B: Implementación de RBAC (Autorización)
+Aquí aplicamos la tabla de permisos que definimos en el análisis de diseño.
+
+Method Security: Usar @PreAuthorize en los Controllers.
+
+
+Ejemplo: Solo SUPERVISOR_PLANTA o TOTAL pueden acceder al POST /api/v1/viajes.
+
+Solo ADMIN o TOTAL pueden crear usuarios.
+
+
+Global Exception Handling: Asegurar que el GlobalExceptionHandler capture las excepciones de acceso denegado (403 Forbidden) para devolver el formato JSON que definimos.
+
+Fase C: Seguridad a Nivel de Datos (El desafío del Supervisor)
+Este es el punto que mencionaste: "El Supervisor X solo puede ver a su equipo".
+
+
+Custom Queries: En EquipoRepository y ViajeRepository, implementaremos métodos que filtren automáticamente por el supervisor_id obtenido del token.
+
+
+Auditoría Automática: Configurar un AuditorAware para que el campo createdBy de la BaseEntity se complete solo usando el SecurityContext.
+
+Fase D: Refinamiento de Configuraciones y Documentación
+
+Swagger (SpringDoc): Configurar el OpenAPI Bean para que acepte el Header Authorization: Bearer <token> en la UI, permitiéndote probar las HUs estando logueado.
+
+
+Jackson Configuration: Asegurar que la serialización de fechas (LocalDateTime) sea consistente en todos los DTOs.
+
+3. Advertencia de Senior: El "Peligro" del Supervisor_ID
+En tu ViajeRequestDTO actual, estás pidiendo el supervisorId en el JSON de entrada. Riesgo: Un usuario malintencionado con rol SUPERVISOR_PLANTA podría enviar el ID de otro supervisor y registrar un viaje a nombre de un tercero.
+
+Acción Correctiva: Una vez implementado JWT, eliminaremos el supervisorId del DTO de entrada. El ViajeService deberá extraerlo directamente del usuario autenticado en el servidor. "Nunca confíes en un ID de auditoría que venga del cliente".
