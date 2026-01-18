@@ -29,6 +29,7 @@ public class VehiculoController {
         VehiculoResponseDTO response = service.save(dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+    
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL')") // Solo roles de alto nivel
     @Operation(summary = "Borrado lógico de un vehículo")

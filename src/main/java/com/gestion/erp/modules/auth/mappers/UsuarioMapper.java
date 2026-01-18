@@ -14,6 +14,7 @@ public interface UsuarioMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "equipo", ignore = true)
+    @Mapping(target = "authorities", ignore = true)
     // El password se mapea automáticamente si el nombre coincide, 
     // luego el Service lo sobreescribirá con el hash.
     Usuario toEntity(UsuarioRequestDTO dto);

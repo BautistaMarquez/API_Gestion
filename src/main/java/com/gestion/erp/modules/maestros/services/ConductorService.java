@@ -54,4 +54,21 @@ public class ConductorService {
         
         return c;
     }
+
+    @Transactional
+    public void eliminarLogico(Long id) {
+     // 1. Buscar el conductor o lanzar 404
+     Conductor conductor = conductorRepository.findById(id)
+             .orElseThrow(() -> new EntityNotFoundException("Conductor no encontrado con ID: " + id)); 
+
+     // 2. REGLA DE NEGOCIO: No se puede borrar si está operando
+     if (conductor.getEstado() == EstadoConductor.OCUPADO) {
+         throw new BusinessException("No se puede eliminar un conductor que se encuentra OCUPADO.");
+     }      
+     // 3. Aplicar borrado lógico
+     conductor.setEstado(EstadoConductor.ELIMINADO);
+
+     // 4. Persistir (el @Transactional se encarga del commit)
+     conductorRepository.save(conductor);
+    }
 }
