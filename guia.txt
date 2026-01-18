@@ -19,31 +19,11 @@ POST /api/v1/vehiculos: Crea un camión.
 
 POST /api/v1/productos: Crea tus productos y sus precios (Snapshot).
 
---------------------------------*-----------------------------------------
+--------------------------------*--------------------------------
 
-Puntos a realizar: 
-Seguridad (Auth): Implementar el Login para obtener el supervisorId automáticamente del token y no tener que pasarlo por el JSON (que es un riesgo de seguridad).
+Ver GET DE PRODUCTOS, TIRA ERROR 500
 
-2. Plan de Acción Ordenado: "Hacia el Cierre del Backend"
-He organizado los puntos de forma cronológica para evitar retrabajos (por ejemplo, no podemos filtrar por "Supervisor actual" si no tenemos el contexto de seguridad funcionando).
-
-Fase A: Cimiento de Seguridad y Autenticación (Prioridad 1)
-Antes de tocar los controladores, el sistema debe saber quién está operando.
-
-Inyección de Dependencias: Agregar spring-boot-starter-security y jjwt al pom.xml. CHECK
-
-
-Configuración de BCrypt: Modificar UsuarioService para hashear el password antes de repository.save(). CHECK
-
-
-Security Config: Crear la clase de configuración para definir qué endpoints son públicos (Login) y cuáles requieren autenticación. CHECK
-
-JWT Provider: Implementar el componente que genera y valida los tokens. CHECK 
-
-Implementamos el login. CHECK
-
-
-Consejo: Asegúrate de que tu GlobalExceptionHandler capture BadCredentialsException para devolver un 401 Unauthorized con un mensaje genérico como "Email o contraseña incorrectos". Nunca digas exactamente qué falló (si el mail o la clave) por seguridad contra ataques de enumeración.
+------------------------------------ * --------------------------
 
 Fase B: Implementación de RBAC (Autorización)
 Aquí aplicamos la tabla de permisos que definimos en el análisis de diseño.

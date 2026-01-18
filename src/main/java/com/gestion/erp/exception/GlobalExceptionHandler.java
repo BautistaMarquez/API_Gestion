@@ -5,6 +5,8 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,5 +63,24 @@ public class GlobalExceptionHandler {
         "El recurso (vehículo o conductor) fue modificado por otro usuario. Por favor, refresca la página e intenta de nuevo."
     );
     return new ResponseEntity<>(error, HttpStatus.CONFLICT); // 409 Conflict
+    }
+
+    /**
+     * Captura fallos de autenticación (Email o Password incorrectos).
+     * Aplicamos un mensaje genérico para evitar ataques de enumeración.
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+        ErrorResponse error = new ErrorResponse("CREDENCIALES_INVALIDAS", "Email o contraseña incorrectos");
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * Captura otros errores de seguridad generales (Token inválido, expirado, etc.)
+     */
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+        ErrorResponse error = new ErrorResponse("AUTENTICACION_FALLIDA", "Error de autenticación: Acceso denegado");
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 }
