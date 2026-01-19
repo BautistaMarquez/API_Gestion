@@ -1,5 +1,6 @@
 package com.gestion.erp.modules.maestros.controllers;
 
+import com.gestion.erp.modules.maestros.dtos.EquipoDetalleResponseDTO;
 import com.gestion.erp.modules.maestros.dtos.EquipoRequestDTO;
 import com.gestion.erp.modules.maestros.dtos.EquipoResponseDTO;
 import com.gestion.erp.modules.maestros.services.EquipoService;
@@ -58,5 +59,10 @@ public class EquipoController {
     public ResponseEntity<Void> asignarConductor(@PathVariable Long id, @PathVariable Long conductorId) {
         service.agregarConductor(id, conductorId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/detalle")
+    public ResponseEntity<EquipoDetalleResponseDTO> verDetalle(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerDetalleEquipo(id));
     }
 }

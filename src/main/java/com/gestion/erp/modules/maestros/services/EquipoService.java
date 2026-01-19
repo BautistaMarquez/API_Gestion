@@ -1,17 +1,23 @@
 package com.gestion.erp.modules.maestros.services;
 
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.gestion.erp.modules.maestros.dtos.EquipoDetalleResponseDTO;
 import com.gestion.erp.modules.maestros.dtos.EquipoRequestDTO;
 import com.gestion.erp.modules.maestros.dtos.EquipoResponseDTO;
+import com.gestion.erp.modules.maestros.mappers.ConductorMapper;
 import com.gestion.erp.modules.maestros.mappers.EquipoMapper;
 import com.gestion.erp.modules.maestros.models.Conductor;
 import com.gestion.erp.modules.maestros.models.Equipo;
 import com.gestion.erp.modules.maestros.models.enums.EstadoConductor;
 import com.gestion.erp.modules.maestros.repositories.ConductorRepository;
 import com.gestion.erp.modules.maestros.repositories.EquipoRepository;
+import com.gestion.erp.modules.auth.mappers.UsuarioMapper;
 import com.gestion.erp.modules.auth.models.Usuario;
 import com.gestion.erp.modules.auth.models.enums.RolUsuario;
 import com.gestion.erp.modules.auth.repositories.UsuarioRepository;
@@ -19,6 +25,7 @@ import com.gestion.erp.exception.BusinessException;
 import com.gestion.erp.exception.EntityNotFoundException;
 import com.gestion.erp.exception.ResourceConflictException;
 import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +34,8 @@ public class EquipoService {
     private final UsuarioRepository usuarioRepository;
     private final EquipoMapper mapper;
     private final ConductorRepository conductorRepository;
+    private final ConductorMapper conductorMapper;
+    private final UsuarioMapper usuarioMapper;
 
     @Transactional
     public EquipoResponseDTO crear(EquipoRequestDTO dto) {
@@ -91,5 +100,26 @@ public class EquipoService {
         }
         conductor.setEquipo(equipo);
         conductorRepository.save(conductor); // Actualizamos el dueño de la relación
+    }
+
+    @Transactional(readOnly = true)
+    public EquipoDetalleResponseDTO obtenerDetalleEquipo(Long id) {
+        // 1. Buscamos el equipo
+        Equipo equipo = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Equipo no encontrado"));
+
+        // 2. Buscamos los conductores asociados a este equipo
+        List<Conductor> conductores = conductorRepository.findByEquipoId(id);
+
+        // 3. Mapeamos todo al DTO de detalle
+        EquipoDetalleResponseDTO detalle = new EquipoDetalleResponseDTO();
+        detalle.setId(equipo.getId());
+        detalle.setNombre(equipo.getNombre());
+        detalle.setSupervisor(usuarioMapper.toResponseDTO(equipo.getSupervisor()));
+        detalle.setConductores(conductores.stream()
+                .map(conductorMapper::toResponseDTO)
+                .collect(Collectors.toList()));
+
+        return detalle;
     }
 }
