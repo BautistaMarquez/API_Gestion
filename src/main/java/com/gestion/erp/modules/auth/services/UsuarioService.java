@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.gestion.erp.modules.auth.models.enums.RolUsuario;
 
 @Service
 @RequiredArgsConstructor
@@ -83,5 +84,10 @@ public class UsuarioService {
         // 4. Encriptar y guardar
         usuario.setPassword(passwordEncoder.encode(request.getNewPassword()));
         repository.save(usuario);
+    }
+
+    public java.util.List<UsuarioResponseDTO> buscarPorRol(RolUsuario rol) {
+        java.util.List<Usuario> usuarios = repository.findByRolAndActivoTrue(rol);
+        return usuarioMapper.toResponseDTOList(usuarios);
     }
 }

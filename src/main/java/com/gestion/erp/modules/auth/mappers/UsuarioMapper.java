@@ -5,6 +5,7 @@ import com.gestion.erp.modules.auth.dtos.UsuarioResponseDTO;
 import com.gestion.erp.modules.auth.models.Usuario;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {
@@ -22,4 +23,5 @@ public interface UsuarioMapper {
 
     UsuarioRequestDTO toRequestDTO(Usuario entity);
     UsuarioResponseDTO toResponseDTO(Usuario entity);
+    List<UsuarioResponseDTO> toResponseDTOList(List<Usuario> entities);
 }

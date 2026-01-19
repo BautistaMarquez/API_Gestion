@@ -17,9 +17,11 @@ import jakarta.validation.Valid;
 import com.gestion.erp.modules.auth.dtos.UsuarioRequestDTO;
 import com.gestion.erp.modules.auth.dtos.UsuarioResponseDTO;
 import com.gestion.erp.modules.auth.models.Usuario;
+import com.gestion.erp.modules.auth.models.enums.RolUsuario;
 import com.gestion.erp.modules.auth.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/usuarios")
@@ -48,5 +50,11 @@ public class UsuarioController {
     public ResponseEntity<Page<UsuarioResponseDTO>> listarPaginado(
         @ParameterObject Pageable pageable) { // @ParameterObject ayuda a Swagger a mostrar los campos
         return ResponseEntity.ok(service.listarPaginado(pageable));
+    }
+
+    @GetMapping("/rol/supervisor")
+    public ResponseEntity<List<UsuarioResponseDTO>> listarSupervisores() {
+        // Solo devolvemos usuarios activos con rol SUPERVISOR
+        return ResponseEntity.ok(service.buscarPorRol(RolUsuario.SUPERVISOR));
     }
 }
