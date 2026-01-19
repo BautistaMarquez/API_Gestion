@@ -1,7 +1,9 @@
 package com.gestion.erp.modules.auth.services;
 
+import com.gestion.erp.exception.BusinessException;
 import com.gestion.erp.exception.EntityNotFoundException;
 import com.gestion.erp.exception.ResourceConflictException;
+import com.gestion.erp.modules.auth.dtos.ChangePasswordRequestDTO;
 import com.gestion.erp.modules.auth.dtos.UsuarioRequestDTO;
 import com.gestion.erp.modules.auth.dtos.UsuarioResponseDTO;
 import com.gestion.erp.modules.auth.mappers.UsuarioMapper;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,5 +60,28 @@ public class UsuarioService {
     Page<Usuario> usuarios = repository.findAll(pageable);
     // La ventaja de Page es que tiene un método .map() muy potente
     return usuarios.map(usuarioMapper::toResponseDTO);
+    }
+
+    @Transactional
+    public void changePassword(ChangePasswordRequestDTO request) {
+        // 1. Obtener el email del usuario autenticado desde el contexto de seguridad
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        
+        Usuario usuario = repository.findByMailIgnoreCaseAndActivoTrue(email)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        // 2. Validar que la contraseña vieja sea correcta
+        if (!passwordEncoder.matches(request.getOldPassword(), usuario.getPassword())) {
+            throw new BusinessException("La contraseña actual es incorrecta");
+        }
+
+        // 3. Validar que la nueva no sea igual a la vieja (Buena práctica de seguridad)
+        if (request.getOldPassword().equals(request.getNewPassword())) {
+            throw new BusinessException("La nueva contraseña no puede ser igual a la anterior");
+        }
+
+        // 4. Encriptar y guardar
+        usuario.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        repository.save(usuario);
     }
 }

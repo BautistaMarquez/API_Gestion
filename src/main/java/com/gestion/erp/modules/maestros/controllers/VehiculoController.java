@@ -6,14 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
+
+import com.gestion.erp.modules.maestros.dtos.EstadoUpdateRequestDTO;
 import com.gestion.erp.modules.maestros.dtos.VehiculoRequestDTO;
 import com.gestion.erp.modules.maestros.dtos.VehiculoResponseDTO;
+import com.gestion.erp.modules.maestros.models.enums.EstadoVehiculo;
 import com.gestion.erp.modules.maestros.services.VehiculoService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,5 +53,12 @@ public class VehiculoController {
     public ResponseEntity<Page<VehiculoResponseDTO>> listarPaginado(
         @ParameterObject Pageable pageable) { // @ParameterObject ayuda a Swagger a mostrar los campos
         return ResponseEntity.ok(service.listarPaginado(pageable));
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<VehiculoResponseDTO> updateEstado(
+        @PathVariable Long id, 
+        @RequestBody EstadoUpdateRequestDTO<EstadoVehiculo> request) {
+        return ResponseEntity.ok(service.actualizarEstadoManual(id, request.getNuevoEstado()));
     }
 }

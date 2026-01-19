@@ -79,4 +79,18 @@ public class ConductorService {
     // La ventaja de Page es que tiene un método .map() muy potente
     return conductores.map(mapper::toResponseDTO);
     }
+
+    @Transactional
+    public ConductorResponseDTO actualizarEstadoManual(Long id, EstadoConductor nuevoEstado) {
+    Conductor conductor = conductorRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Conductor no encontrado"));
+
+    // REGLA DE NEGOCIO: No se puede cambiar el estado si está ocupado
+    if (conductor.getEstado() == EstadoConductor.OCUPADO) {
+        throw new BusinessException("No se puede cambiar el estado de un conductor que está OCUPADO en un viaje.");
+    }
+
+    conductor.setEstado(nuevoEstado);
+    return mapper.toResponseDTO(conductorRepository.save(conductor));
+    }
 }

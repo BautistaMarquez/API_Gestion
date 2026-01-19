@@ -67,4 +67,23 @@ public VehiculoResponseDTO save(VehiculoRequestDTO dto) {
     // La ventaja de Page es que tiene un método .map() muy potente
     return vehiculos.map(mapper::toResponseDTO);
     }
+
+    @Transactional
+    public VehiculoResponseDTO actualizarEstadoManual(Long id, EstadoVehiculo nuevoEstado) {
+    Vehiculo vehiculo = vehiculoRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Vehículo no encontrado"));
+
+    // REGLA DE NEGOCIO: No se puede cambiar el estado si está en viaje
+    if (vehiculo.getEstado() == EstadoVehiculo.EN_VIAJE) {
+        throw new BusinessException("No se puede cambiar el estado de un vehículo que está EN_VIAJE. Debe finalizar el viaje primero.");
+    }
+
+    // Si el estado es el mismo, no hacemos nada (Idempotencia)
+    if (vehiculo.getEstado() == nuevoEstado) {
+        return mapper.toResponseDTO(vehiculo);
+    }
+
+    vehiculo.setEstado(nuevoEstado);
+    return mapper.toResponseDTO(vehiculoRepository.save(vehiculo));
+    }
 }
