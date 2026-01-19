@@ -18,5 +18,12 @@ public interface ProductoPrecioMapper {
     ProductoPrecio toEntity(PrecioInicialDTO dto);
 
     // Para la respuesta: Mapea la entidad al DTO de salida
+    @Mapping(target = "producto", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    ProductoPrecio toEntity(ProductoPrecioDTO dto);
+
+    // Para la respuesta: Mapea la entidad al DTO de salida
     ProductoPrecioDTO toDTO(ProductoPrecio entity);
 }
