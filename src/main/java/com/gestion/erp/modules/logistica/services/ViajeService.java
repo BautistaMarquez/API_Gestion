@@ -21,7 +21,12 @@ import com.gestion.erp.modules.maestros.repositories.*;
 import com.gestion.erp.modules.maestros.services.ConductorService;
 import com.gestion.erp.modules.maestros.services.VehiculoService;
 import com.gestion.erp.shared.util.SecurityUtils;
+
+import jakarta.persistence.criteria.JoinType;
+
 import java.util.List;
+import org.springframework.data.jpa.domain.Specification;
+import com.gestion.erp.modules.logistica.Specification.ViajeSpecification;
 
 
 @Service
@@ -132,4 +137,34 @@ public class ViajeService {
     // La ventaja de Page es que tiene un método .map() muy potente
     return viajes.map(viajeMapper::toResponseDTO);
     }
+
+@Transactional(readOnly = true)
+public Page<ViajeResponseDTO> buscarConFiltros(ViajeSearchDTO filtro, Pageable pageable) {
+    Specification<Viaje> spec = (root, query, cb) -> {
+        // Si es una consulta de datos (no un count), hacemos fetch
+        if (Long.class != query.getResultType()) {
+            root.fetch("vehiculo", JoinType.LEFT);
+            root.fetch("conductor", JoinType.LEFT);
+        }
+        return cb.conjunction();
+    };
+
+    if (filtro.getFechaDesde() != null && filtro.getFechaHasta() != null) {
+        if (filtro.getFechaDesde().isAfter(filtro.getFechaHasta())) {
+        throw new BusinessException("La fecha de inicio no puede ser posterior a la fecha de fin");
+    }
+        spec = spec.and(ViajeSpecification.conFechaEntre(filtro.getFechaDesde(), filtro.getFechaHasta()));
+    }
+
+    if (filtro.getEstado() != null) {
+        spec = spec.and(ViajeSpecification.conEstado(filtro.getEstado()));
+    }
+
+    if (filtro.getPatente() != null && !filtro.getPatente().isEmpty()) {
+        spec = spec.and(ViajeSpecification.conPatente(filtro.getPatente()));
+    }
+
+    return viajeRepository.findAll(spec, pageable)
+            .map(viajeMapper::toResponseDTO);
+}
 }

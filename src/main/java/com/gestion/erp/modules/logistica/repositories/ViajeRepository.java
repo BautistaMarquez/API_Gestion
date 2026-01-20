@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 import com.gestion.erp.modules.logistica.dtos.DashboardDTO;
 import com.gestion.erp.modules.logistica.models.Viaje;
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 @Repository
-public interface ViajeRepository extends JpaRepository<Viaje, Long> {
+public interface ViajeRepository extends JpaRepository<Viaje, Long>, JpaSpecificationExecutor<Viaje> {
 
     @EntityGraph(attributePaths = {"supervisor", "vehiculo", "conductor"})
     List<Viaje> findBySupervisorId(Long supervisorId);

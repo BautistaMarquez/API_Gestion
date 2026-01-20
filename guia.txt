@@ -28,22 +28,6 @@ Ver GET DE PRODUCTOS, TIRA ERROR 500
 3. Plan de Acción: Hoja de Ruta Final
 He dividido esto en 4 "Sprints" cortos de backend para organizar el trabajo:
 
-Sprint B: El "Tarifario" (Mantenimiento de Precios)
-Crear ProductoPrecioController.
-
-Implementar:
-
-POST /api/v1/precios: Crear un nuevo precio para un producto_id.
-
-PUT /api/v1/precios/{id}: Actualizar el valor o la etiqueta.
-
-DELETE /api/v1/precios/{id}: Borrado físico (seguro gracias a tus snapshots).
-
-Sprint C: Visualización Operativa (Equipos y Detalles)
-Refactorizar EquipoResponseDTO o crear uno nuevo (EquipoDetalleDTO) que incluya List<ConductorResponseDTO>.
-
-Asegurar que el GET /api/v1/equipos/{id} devuelva toda la estructura para la pestaña que planeas en el Front.
-
 Sprint D: Reportes y Filtros (Query Methods / Specifications)
 Implementar la búsqueda de viajes por rango de fechas, estado o patente.
 

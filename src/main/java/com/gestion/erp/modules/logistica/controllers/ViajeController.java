@@ -3,6 +3,7 @@ package com.gestion.erp.modules.logistica.controllers;
 import com.gestion.erp.modules.logistica.dtos.ViajeCierreRequestDTO;
 import com.gestion.erp.modules.logistica.dtos.ViajeRequestDTO;
 import com.gestion.erp.modules.logistica.dtos.ViajeResponseDTO;
+import com.gestion.erp.modules.logistica.dtos.ViajeSearchDTO;
 import com.gestion.erp.modules.logistica.services.ViajeService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,5 +69,13 @@ public class ViajeController {
     public ResponseEntity<Page<ViajeResponseDTO>> listarPaginado(
         @ParameterObject Pageable pageable) { // @ParameterObject ayuda a Swagger a mostrar los campos
         return ResponseEntity.ok(viajeService.listarPaginado(pageable));
+    }
+
+    @GetMapping("/filter")
+    @Operation(summary = "Buscador avanzado de viajes con filtros dinámicos")
+    public ResponseEntity<Page<ViajeResponseDTO>> filtrarViajes(
+        ViajeSearchDTO filtro, 
+        @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(viajeService.buscarConFiltros(filtro, pageable));
     }
 }
