@@ -45,7 +45,7 @@ public class UsuarioController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL','ADMINISTRATIVO')")
     @Operation(summary = "Listar usuarios con paginación")
     public ResponseEntity<Page<UsuarioResponseDTO>> listarPaginado(
         @ParameterObject Pageable pageable) { // @ParameterObject ayuda a Swagger a mostrar los campos
@@ -53,6 +53,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/rol/supervisor")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL','ADMINISTRATIVO')")
+    @Operation(summary = "Listar todos los supervisores activos")
     public ResponseEntity<List<UsuarioResponseDTO>> listarSupervisores() {
         // Solo devolvemos usuarios activos con rol SUPERVISOR
         return ResponseEntity.ok(service.buscarPorRol(RolUsuario.SUPERVISOR));

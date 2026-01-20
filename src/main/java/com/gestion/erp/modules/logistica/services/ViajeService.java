@@ -132,14 +132,16 @@ public class ViajeService {
         }
     }
 
+    // --- MÉTODOS DE BÚSQUEDA AVANZADA ---
+
+    @Transactional(readOnly = true)
     public Page<ViajeResponseDTO> listarPaginado(Pageable pageable) {
     Page<Viaje> viajes = viajeRepository.findAll(pageable);
-    // La ventaja de Page es que tiene un método .map() muy potente
     return viajes.map(viajeMapper::toResponseDTO);
     }
 
-@Transactional(readOnly = true)
-public Page<ViajeResponseDTO> buscarConFiltros(ViajeSearchDTO filtro, Pageable pageable) {
+    @Transactional(readOnly = true)
+    public Page<ViajeResponseDTO> buscarConFiltros(ViajeSearchDTO filtro, Pageable pageable) {
     Specification<Viaje> spec = (root, query, cb) -> {
         // Si es una consulta de datos (no un count), hacemos fetch
         if (Long.class != query.getResultType()) {
@@ -166,5 +168,5 @@ public Page<ViajeResponseDTO> buscarConFiltros(ViajeSearchDTO filtro, Pageable p
 
     return viajeRepository.findAll(spec, pageable)
             .map(viajeMapper::toResponseDTO);
-}
+    }  
 }

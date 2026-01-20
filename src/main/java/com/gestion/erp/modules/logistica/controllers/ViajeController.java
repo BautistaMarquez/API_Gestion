@@ -56,7 +56,7 @@ public class ViajeController {
      * Permite listar todos los viajes o filtrar por supervisor según el rol del usuario.
      */
     @GetMapping
-    @PreAuthorize("hasAnyRole('SUPERSIVOR','ADMIN','TOTAL')")
+    @PreAuthorize("hasAnyRole('SUPERSIVOR','ADMIN','TOTAL', 'ADMINISTRATIVO')")
     @Operation(summary = "Listar todos los viajes")
     public ResponseEntity<List<ViajeResponseDTO>> listarViajes() {
         List<ViajeResponseDTO> viajes = viajeService.listarViajes();
@@ -64,7 +64,7 @@ public class ViajeController {
     }  
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO', 'SUPERVISOR')")
     @Operation(summary = "Listar vehículos con paginación")
     public ResponseEntity<Page<ViajeResponseDTO>> listarPaginado(
         @ParameterObject Pageable pageable) { // @ParameterObject ayuda a Swagger a mostrar los campos
@@ -72,6 +72,7 @@ public class ViajeController {
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO', 'SUPERVISOR')")
     @Operation(summary = "Buscador avanzado de viajes con filtros dinámicos")
     public ResponseEntity<Page<ViajeResponseDTO>> filtrarViajes(
         ViajeSearchDTO filtro, 

@@ -47,6 +47,8 @@ public class ConductorController {
     }
 
     @PatchMapping("/{id}/estado")
+    @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
+    @Operation(summary = "Actualizar el estado de un conductor")
     public ResponseEntity<ConductorResponseDTO> updateEstado(
         @PathVariable Long id, 
         @RequestBody EstadoUpdateRequestDTO<EstadoConductor> request) {

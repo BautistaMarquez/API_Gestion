@@ -38,7 +38,6 @@ public class UsuarioService {
         Usuario usuario = usuarioMapper.toEntity(dto);
 
         // 3. Hashing de Password (BCrypt)
-        // Nunca guardamos texto plano. BCrypt incluye un "salt" aleatorio automáticamente.
         usuario.setPassword(passwordEncoder.encode(dto.password())); 
         
         // 4. Persistencia
@@ -59,7 +58,6 @@ public class UsuarioService {
 
     public Page<UsuarioResponseDTO> listarPaginado(Pageable pageable) {
     Page<Usuario> usuarios = repository.findAll(pageable);
-    // La ventaja de Page es que tiene un método .map() muy potente
     return usuarios.map(usuarioMapper::toResponseDTO);
     }
 

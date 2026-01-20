@@ -62,6 +62,8 @@ public class EquipoController {
     }
 
     @GetMapping("/{id}/detalle")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO', 'SUPERVISOR')")
+    @Operation(summary = "Ver detalle de un equipo por ID")
     public ResponseEntity<EquipoDetalleResponseDTO> verDetalle(@PathVariable Long id) {
         return ResponseEntity.ok(service.obtenerDetalleEquipo(id));
     }

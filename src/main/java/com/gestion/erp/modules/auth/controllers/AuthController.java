@@ -40,6 +40,7 @@ public class AuthController {
     }
 
     @PatchMapping("/change-password")
+    @Operation(summary = "Cambiar la contraseña de un usuario")
     public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequestDTO request) {
     usuarioService.changePassword(request);
     return ResponseEntity.noContent().build(); // 204 No Content es ideal para actualizaciones exitosas sin retorno

@@ -25,13 +25,6 @@ Ver GET DE PRODUCTOS, TIRA ERROR 500
 
 ------------------------------------ * --------------------------
 
-3. Plan de Acción: Hoja de Ruta Final
-He dividido esto en 4 "Sprints" cortos de backend para organizar el trabajo:
-
-Sprint D: Reportes y Filtros (Query Methods / Specifications)
-Implementar la búsqueda de viajes por rango de fechas, estado o patente.
-
-Optimizar los queries del Dashboard si es necesario.
 
 4. Advertencias de Senior (Cuestiones a tener en cuenta)
 Validación de Roles (RBAC): Asegúrate de que los nuevos endpoints de "Desactivar" o "Cambiar Estados" tengan la anotación @PreAuthorize correcta. Solo ADMIN o TOTAL deberían poder desactivar usuarios, pero un ADMINISTRATIVO podría poner un camión en mantenimiento.

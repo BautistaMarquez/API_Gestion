@@ -56,6 +56,8 @@ public class VehiculoController {
     }
 
     @PatchMapping("/{id}/estado")
+    @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
+    @Operation(summary = "Actualizar el estado de un vehículo manualmente")
     public ResponseEntity<VehiculoResponseDTO> updateEstado(
         @PathVariable Long id, 
         @RequestBody EstadoUpdateRequestDTO<EstadoVehiculo> request) {
