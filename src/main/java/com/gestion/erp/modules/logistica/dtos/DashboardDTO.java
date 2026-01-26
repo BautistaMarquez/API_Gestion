@@ -1,9 +1,11 @@
 package com.gestion.erp.modules.logistica.dtos;
 
+import java.math.BigDecimal;
+
 public record DashboardDTO(
-    long totalViajes,
-    long viajesEnProceso,
-    long viajesFinalizados,
-    double ventaTotalEfectiva,
-    double promedioVentaPorViaje
+    Long totalViajes,
+    Long viajesEnProceso,
+    Long viajesFinalizados,
+    BigDecimal ventaTotalEfectiva,
+    Double promedioVentaPorViaje
 ) {}

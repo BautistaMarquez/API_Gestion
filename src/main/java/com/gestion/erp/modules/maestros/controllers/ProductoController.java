@@ -42,16 +42,6 @@ public class ProductoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Endpoint para obtener el catálogo completo de productos.
-     */
-    @GetMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
-    @Operation(summary = "Listar todos los productos")
-    public ResponseEntity<List<ProductoResponseDTO>> listarProductos() {
-        return ResponseEntity.ok(productoService.listarTodos());
-    }
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL')") // Solo roles de alto nivel
     @Operation(summary = "Borrado lógico de un producto")

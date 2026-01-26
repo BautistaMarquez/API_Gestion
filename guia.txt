@@ -6,6 +6,9 @@ http://localhost:8080/swagger-ui/index.html // Direccion SwaggerUI
 
 ./mvnw clean install -DskipTests // Limpiar cache de maven y compilar, por si modifico pom. Para limpiar basura de target.
 
+Mail: admin5@erp.com
+Contraeña: admin1234
+
 --------------------------------*-----------------------------------------
 
 Checklist para probar en Swagger:

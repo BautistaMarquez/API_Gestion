@@ -51,18 +51,6 @@ public class ViajeController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Listar Viajes.
-     * Permite listar todos los viajes o filtrar por supervisor según el rol del usuario.
-     */
-    @GetMapping
-    @PreAuthorize("hasAnyRole('SUPERSIVOR','ADMIN','TOTAL', 'ADMINISTRATIVO')")
-    @Operation(summary = "Listar todos los viajes")
-    public ResponseEntity<List<ViajeResponseDTO>> listarViajes() {
-        List<ViajeResponseDTO> viajes = viajeService.listarViajes();
-        return ResponseEntity.ok(viajes);
-    }  
-
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO', 'SUPERVISOR')")
     @Operation(summary = "Listar vehículos con paginación")
