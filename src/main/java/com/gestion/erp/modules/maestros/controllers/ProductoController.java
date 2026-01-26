@@ -16,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * Controlador REST para la gestión del maestro de productos.
  * Sigue las convenciones de nomenclatura plural para recursos.
