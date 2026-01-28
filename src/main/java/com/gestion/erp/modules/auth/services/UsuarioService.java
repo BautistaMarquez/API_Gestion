@@ -45,15 +45,13 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void eliminarLogico(Long id) {
-     // 1. Buscar el producto o lanzar 404
-     Usuario usuario = repository.findById(id)
-             .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + id));       
+    public UsuarioResponseDTO eliminarLogico(Long id) {
+        Usuario usuario = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + id));       
 
-     // 2. Aplicar borrado lógico
-     usuario.setActivo(false);
-     // 3. Persistir (el @Transactional se encarga del commit)
-     repository.save(usuario);
+        usuario.setActivo(false);
+        Usuario actualizado = repository.save(usuario);
+        return usuarioMapper.toResponseDTO(actualizado);
     }
 
     public Page<UsuarioResponseDTO> listarPaginado(Pageable pageable) {
@@ -82,6 +80,18 @@ public class UsuarioService {
         // 4. Encriptar y guardar
         usuario.setPassword(passwordEncoder.encode(request.getNewPassword()));
         repository.save(usuario);
+    }
+
+    @Transactional
+    public UsuarioResponseDTO resetPassword(Long id, String nuevaPassword) {
+        Usuario usuario = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + id));
+
+        // Encriptar y actualizar la contraseña
+        usuario.setPassword(passwordEncoder.encode(nuevaPassword));
+        Usuario actualizado = repository.save(usuario);
+
+        return usuarioMapper.toResponseDTO(actualizado);
     }
 
     public java.util.List<UsuarioResponseDTO> buscarPorRol(RolUsuario rol) {

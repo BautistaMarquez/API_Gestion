@@ -6,14 +6,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
+
+import com.gestion.erp.modules.auth.dtos.ResetPasswordRequest;
 import com.gestion.erp.modules.auth.dtos.UsuarioRequestDTO;
 import com.gestion.erp.modules.auth.dtos.UsuarioResponseDTO;
 import com.gestion.erp.modules.auth.models.Usuario;
@@ -36,12 +39,10 @@ public class UsuarioController {
         return new ResponseEntity<>(service.registrar(dto), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL')") // Solo roles de alto nivel
-    @Operation(summary = "Borrado lógico de un usuario")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        service.eliminarLogico(id);
-        return ResponseEntity.noContent().build(); // Devuelve 204
+    @PatchMapping("/{id}/desactivar")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL')")
+    public ResponseEntity<UsuarioResponseDTO> desactivar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.eliminarLogico(id));
     }
 
     @GetMapping
@@ -58,5 +59,13 @@ public class UsuarioController {
     public ResponseEntity<List<UsuarioResponseDTO>> listarSupervisores() {
         // Solo devolvemos usuarios activos con rol SUPERVISOR
         return ResponseEntity.ok(service.buscarPorRol(RolUsuario.SUPERVISOR));
+    }
+
+    @PutMapping("/{id}/reset-password")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL')")
+    public ResponseEntity<UsuarioResponseDTO> resetPassword(
+        @PathVariable Long id, 
+        @RequestBody ResetPasswordRequest request) { // Usamos el DTO
+            return ResponseEntity.ok(service.resetPassword(id, request.nuevaPassword()));
     }
 }
