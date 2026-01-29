@@ -60,7 +60,7 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Page<UsuarioResponseDTO> listarPaginado(Pageable pageable) {
         try {
-            Page<Usuario> usuarios = repository.findAll(pageable);
+            Page<Usuario> usuarios = repository.findAllIncludingInactive(pageable);
             return usuarios.map(usuarioMapper::toResponseDTO);
         } catch (Exception ex) {
             log.error("Error listando usuarios (pageable={})", pageable, ex);

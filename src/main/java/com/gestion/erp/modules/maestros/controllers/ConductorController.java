@@ -3,6 +3,7 @@ package com.gestion.erp.modules.maestros.controllers;
 import com.gestion.erp.modules.maestros.dtos.ConductorRequestDTO;
 import com.gestion.erp.modules.maestros.dtos.ConductorResponseDTO;
 import com.gestion.erp.modules.maestros.dtos.EstadoUpdateRequestDTO;
+import com.gestion.erp.modules.maestros.dtos.LicenciaUpdateRequestDTO;
 import com.gestion.erp.modules.maestros.models.enums.EstadoConductor;
 import com.gestion.erp.modules.maestros.services.ConductorService;
 
@@ -60,5 +61,14 @@ public class ConductorController {
         @PathVariable Long id, 
         @RequestBody EstadoUpdateRequestDTO<EstadoConductor> request) {
         return ResponseEntity.ok(service.actualizarEstadoManual(id, request.getNuevoEstado()));
+    }
+
+    @PatchMapping("/{id}/licencia")
+    @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
+    @Operation(summary = "Actualizar la fecha de vencimiento de la licencia")
+    public ResponseEntity<ConductorResponseDTO> updateLicencia(
+        @PathVariable Long id,
+        @Valid @RequestBody LicenciaUpdateRequestDTO request) {
+        return ResponseEntity.ok(service.actualizarLicenciaVencimiento(id, request.getNuevaFechaVencimiento()));
     }
 }

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.gestion.erp.modules.auth.models.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 import java.util.List;
 import com.gestion.erp.modules.auth.models.enums.RolUsuario;
@@ -18,4 +20,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query("SELECT u FROM Usuario u WHERE u.rol = :rol AND u.id NOT IN (SELECT e.supervisor.id FROM Equipo e WHERE e.supervisor IS NOT NULL)")
     List<Usuario> findSupervisoresDisponibles(@Param("rol") RolUsuario rol);
+
+    @Query(value = "SELECT * FROM usuarios", countQuery = "SELECT count(*) FROM usuarios", nativeQuery = true)
+    Page<Usuario> findAllIncludingInactive(Pageable pageable);
 }

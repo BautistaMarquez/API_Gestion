@@ -98,7 +98,36 @@ public class ConductorService {
         throw new BusinessException("No se puede cambiar el estado de un conductor que está OCUPADO en un viaje.");
     }
 
+    // REGLA DE NEGOCIO: No se puede setear OCUPADO manualmente
+    if (nuevoEstado == EstadoConductor.OCUPADO) {
+        throw new BusinessException("No se puede cambiar manualmente el estado a OCUPADO.");
+    }
+
     conductor.setEstado(nuevoEstado);
     return mapper.toResponseDTO(conductorRepository.save(conductor));
+    }
+
+    @Transactional
+    public ConductorResponseDTO actualizarLicenciaVencimiento(Long id, java.time.LocalDate nuevaFecha) {
+        Conductor conductor = conductorRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Conductor no encontrado"));
+
+        LocalDate actual = conductor.getLicenciaVencimiento();
+        if (nuevaFecha == null) {
+            throw new BusinessException("La nueva fecha de vencimiento es obligatoria.");
+        }
+
+        // REGLA DE NEGOCIO: debe ser mayor a la fecha actual de vencimiento
+        if (!nuevaFecha.isAfter(actual)) {
+            throw new BusinessException("La nueva fecha de vencimiento debe ser mayor a la fecha actual.");
+        }
+
+        // Verificación básica: no permitir fechas pasadas
+        if (nuevaFecha.isBefore(LocalDate.now())) {
+            throw new BusinessException("La nueva fecha de vencimiento no puede ser anterior a hoy.");
+        }
+
+        conductor.setLicenciaVencimiento(nuevaFecha);
+        return mapper.toResponseDTO(conductorRepository.save(conductor));
     }
 }
