@@ -61,6 +61,13 @@ public class UsuarioController {
         return ResponseEntity.ok(service.buscarPorRol(RolUsuario.SUPERVISOR));
     }
 
+    @GetMapping("/rol/supervisor/disponibles")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL','ADMINISTRATIVO')")
+    @Operation(summary = "Listar supervisores activos sin equipo asignado")
+    public ResponseEntity<List<UsuarioResponseDTO>> listarSupervisoresDisponibles() {
+        return ResponseEntity.ok(service.listarSupervisoresDisponibles());
+    }
+
     @PutMapping("/{id}/reset-password")
     @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL')")
     public ResponseEntity<UsuarioResponseDTO> resetPassword(

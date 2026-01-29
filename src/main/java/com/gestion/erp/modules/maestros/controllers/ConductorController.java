@@ -46,6 +46,13 @@ public class ConductorController {
         return ResponseEntity.ok(service.listarPaginado(pageable));
     }
 
+    @GetMapping("/disponibles")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO')")
+    @Operation(summary = "Listar conductores disponibles sin equipo")
+    public ResponseEntity<java.util.List<ConductorResponseDTO>> listarDisponibles() {
+        return ResponseEntity.ok(service.listarDisponibles());
+    }
+
     @PatchMapping("/{id}/estado")
     @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
     @Operation(summary = "Actualizar el estado de un conductor")

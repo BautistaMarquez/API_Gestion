@@ -6,10 +6,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import com.gestion.erp.modules.maestros.models.enums.EstadoConductor;
 
 @Repository
 public interface ConductorRepository extends JpaRepository<Conductor, Long> {
     Optional<Conductor> findByDni(String dni);
     boolean existsByDni(String dni);
     List<Conductor> findByEquipoId(Long equipoId);
+    List<Conductor> findByEstadoAndEquipoIsNull(EstadoConductor estado);
 }

@@ -3,9 +3,12 @@ package com.gestion.erp.modules.maestros.mappers;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import com.gestion.erp.modules.maestros.dtos.ConductorRequestDTO;
 import com.gestion.erp.modules.maestros.dtos.ConductorResponseDTO;
 import com.gestion.erp.modules.maestros.models.Conductor;
+import com.gestion.erp.modules.maestros.models.Equipo;
+
 
 @Mapper(
     componentModel = "spring", 
@@ -21,6 +24,11 @@ public interface ConductorMapper {
     @Mapping(target = "createdBy", ignore = true)
     Conductor toEntity(ConductorRequestDTO dto);
 
-    @Mapping(target = "nombreEquipo", source = "equipo.nombre")
+    @Mapping(target = "nombreEquipo", source = "equipo", qualifiedByName = "equipoToNombre")
     ConductorResponseDTO toResponseDTO(Conductor conductor);
+
+    @Named("equipoToNombre")
+    default String equipoToNombre(Equipo equipo) {
+        return equipo != null ? equipo.getNombre() : "";
+    }
 }

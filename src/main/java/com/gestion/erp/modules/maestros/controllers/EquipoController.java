@@ -61,6 +61,14 @@ public class EquipoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/conductores/{conductorId}/desasignar")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO')")
+    @Operation(summary = "Desasigna un conductor de un equipo")
+    public ResponseEntity<Void> desasignarConductor(@PathVariable Long id, @PathVariable Long conductorId) {
+        service.quitarConductor(id, conductorId);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{id}/detalle")
     @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO', 'SUPERVISOR')")
     @Operation(summary = "Ver detalle de un equipo por ID")

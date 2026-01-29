@@ -34,11 +34,12 @@ public class ConductorService {
             throw new ResourceConflictException("Ya existe un conductor con DNI " + dto.dni());
         }
 
-        Equipo equipo = equipoRepository.findById(dto.equipoId())
-            .orElseThrow(() -> new EntityNotFoundException("Equipo no encontrado"));
-
         Conductor conductor = mapper.toEntity(dto);
-        conductor.setEquipo(equipo);
+        if (dto.equipoId() != null) {
+            Equipo equipo = equipoRepository.findById(dto.equipoId())
+                .orElseThrow(() -> new EntityNotFoundException("Equipo no encontrado"));
+            conductor.setEquipo(equipo);
+        }
 
         return mapper.toResponseDTO(conductorRepository.save(conductor));
     }    
@@ -74,10 +75,17 @@ public class ConductorService {
      conductorRepository.save(conductor);
     }
 
+    @Transactional(readOnly = true)
     public Page<ConductorResponseDTO> listarPaginado(Pageable pageable) {
     Page<Conductor> conductores = conductorRepository.findAll(pageable);
     // La ventaja de Page es que tiene un método .map() muy potente
     return conductores.map(mapper::toResponseDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public java.util.List<ConductorResponseDTO> listarDisponibles() {
+        java.util.List<Conductor> conductores = conductorRepository.findByEstadoAndEquipoIsNull(EstadoConductor.DISPONIBLE);
+        return conductores.stream().map(mapper::toResponseDTO).toList();
     }
 
     @Transactional

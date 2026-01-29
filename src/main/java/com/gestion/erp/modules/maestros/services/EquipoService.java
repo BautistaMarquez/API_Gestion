@@ -46,6 +46,10 @@ public class EquipoService {
         Usuario supervisor = usuarioRepository.findById(dto.supervisorId())
             .orElseThrow(() -> new EntityNotFoundException("Supervisor no encontrado"));
 
+        repository.findBySupervisorId(dto.supervisorId()).ifPresent(e -> {
+            throw new BusinessException("Este supervisor ya está a cargo del equipo: " + e.getNombre());
+        });
+
         // Regla de Negocio: El usuario debe tener rol de SUPERVISOR (Auditoría)
         // Nota: Aquí podrías validar el Enum RolUsuario
         
@@ -55,9 +59,9 @@ public class EquipoService {
         return mapper.toResponseDTO(repository.save(equipo));
     }
 
+    @Transactional(readOnly = true)
     public Page<EquipoResponseDTO> listarPaginado(Pageable pageable) {
         Page<Equipo> equipos = repository.findAll(pageable);
-        // La ventaja de Page es que tiene un método .map() muy potente
         return equipos.map(mapper::toResponseDTO);
     }
 
@@ -100,6 +104,26 @@ public class EquipoService {
         }
         conductor.setEquipo(equipo);
         conductorRepository.save(conductor); // Actualizamos el dueño de la relación
+    }
+
+    @Transactional
+    public void quitarConductor(Long equipoId, Long conductorId) {
+        Equipo equipo = repository.findById(equipoId)
+            .orElseThrow(() -> new EntityNotFoundException("Equipo no encontrado"));
+
+        Conductor conductor = conductorRepository.findById(conductorId)
+            .orElseThrow(() -> new EntityNotFoundException("Conductor no encontrado"));
+
+        if (conductor.getEstado() == EstadoConductor.OCUPADO) {
+            throw new BusinessException("No se puede desasignar un conductor que está OCUPADO en un viaje.");
+        }
+
+        if (conductor.getEquipo() == null || !conductor.getEquipo().getId().equals(equipo.getId())) {
+            throw new BusinessException("El conductor no pertenece a este equipo.");
+        }
+
+        conductor.setEquipo(null);
+        conductorRepository.save(conductor);
     }
 
     @Transactional(readOnly = true)
