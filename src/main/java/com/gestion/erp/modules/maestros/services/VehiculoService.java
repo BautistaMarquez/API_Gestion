@@ -63,7 +63,7 @@ public VehiculoResponseDTO save(VehiculoRequestDTO dto) {
     }
 
     public Page<VehiculoResponseDTO> listarPaginado(Pageable pageable) {
-    Page<Vehiculo> vehiculos = vehiculoRepository.findAll(pageable);
+    Page<Vehiculo> vehiculos = vehiculoRepository.findAllIncludingDeleted(pageable);
     // La ventaja de Page es que tiene un método .map() muy potente
     return vehiculos.map(mapper::toResponseDTO);
     }
@@ -76,6 +76,11 @@ public VehiculoResponseDTO save(VehiculoRequestDTO dto) {
     // REGLA DE NEGOCIO: No se puede cambiar el estado si está en viaje
     if (vehiculo.getEstado() == EstadoVehiculo.EN_VIAJE) {
         throw new BusinessException("No se puede cambiar el estado de un vehículo que está EN_VIAJE. Debe finalizar el viaje primero.");
+    }
+
+    // REGLA DE NEGOCIO: No se puede setear EN_VIAJE manualmente
+    if (nuevoEstado == EstadoVehiculo.EN_VIAJE) {
+        throw new BusinessException("No se puede cambiar manualmente el estado a EN_VIAJE.");
     }
 
     // Si el estado es el mismo, no hacemos nada (Idempotencia)

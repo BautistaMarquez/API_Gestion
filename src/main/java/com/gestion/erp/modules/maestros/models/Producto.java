@@ -34,7 +34,8 @@ public class Producto extends BaseEntity {
     // Relación Bidireccional: Un producto tiene muchos precios (Tarifario)
     // mappedBy: indica que el campo "producto" en la clase ProductoPrecio es el dueño de la relación
     // cascade: si guardas un producto con precios nuevos, se guardan automáticamente
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    // fetch = FetchType.EAGER para cargar precios inmediatamente en listados
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Builder.Default
     @JsonManagedReference
     private List<ProductoPrecio> precios = new ArrayList<>();

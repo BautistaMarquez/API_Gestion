@@ -9,6 +9,7 @@ import com.gestion.erp.modules.maestros.models.ProductoPrecio;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 
 import java.util.List;
 
@@ -22,10 +23,12 @@ public interface ProductoMapper {
     Producto toEntity(ProductoRequestDTO dto);
 
     // --- MÉTODO 2: ENTIDAD -> RESPONSE (Para Salida API) ---
+    @Mapping(target = "precios", qualifiedByName = "toPrecioDTOList")
     ProductoResponseDTO toResponseDTO(Producto producto);
 
     // --- MÉTODO 3: LISTA ENTIDAD -> LISTA DTO (Interno para el Response) ---
     // MapStruct lo usa automáticamente al procesar ProductoResponseDTO
+    @Named("toPrecioDTOList")
     List<ProductoPrecioDTO> toPrecioDTOList(List<ProductoPrecio> precios);
 
     // Mapeo de un solo precio para la respuesta
