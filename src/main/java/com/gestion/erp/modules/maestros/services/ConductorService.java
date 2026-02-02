@@ -88,6 +88,12 @@ public class ConductorService {
         return conductores.stream().map(mapper::toResponseDTO).toList();
     }
 
+    @Transactional(readOnly = true)
+    public java.util.List<ConductorResponseDTO> listarDisponiblesConEquipo() {
+        java.util.List<Conductor> conductores = conductorRepository.findByEstadoAndEquipoIsNotNull(EstadoConductor.DISPONIBLE);
+        return conductores.stream().map(mapper::toResponseDTO).toList();
+    }
+
     @Transactional
     public ConductorResponseDTO actualizarEstadoManual(Long id, EstadoConductor nuevoEstado) {
     Conductor conductor = conductorRepository.findById(id)

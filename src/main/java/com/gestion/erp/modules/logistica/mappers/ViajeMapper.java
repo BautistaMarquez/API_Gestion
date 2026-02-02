@@ -9,7 +9,7 @@ import com.gestion.erp.modules.logistica.models.ViajeDetalle;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {ViajeDetalleMapper.class})
+@Mapper(componentModel = "spring")
 public interface ViajeMapper {
 
     @Mapping(target = "id", ignore = true)
@@ -20,6 +20,7 @@ public interface ViajeMapper {
     @Mapping(target = "vehiculo", ignore = true)   // Se resuelven por ID en el Service
     @Mapping(target = "conductor", ignore = true)  // Se resuelven por ID en el Service
     @Mapping(target = "supervisor", ignore = true) // Se resuelven por ID en el Service
+    @Mapping(target = "detalles", ignore = true)   // Se crean manualmente en el Service
     @Mapping(target = "version", ignore = true)
     Viaje toEntity(ViajeRequestDTO dto);
 

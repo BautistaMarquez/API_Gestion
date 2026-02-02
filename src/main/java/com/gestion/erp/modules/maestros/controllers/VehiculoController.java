@@ -55,6 +55,13 @@ public class VehiculoController {
         return ResponseEntity.ok(service.listarPaginado(pageable));
     }
 
+    @GetMapping("/disponibles")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO', 'SUPERVISOR_PLANTA')")
+    @Operation(summary = "Listar vehículos disponibles")
+    public ResponseEntity<java.util.List<VehiculoResponseDTO>> listarDisponibles() {
+        return ResponseEntity.ok(service.listarDisponibles());
+    }
+
     @PatchMapping("/{id}/estado")
     @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
     @Operation(summary = "Actualizar el estado de un vehículo manualmente")

@@ -60,7 +60,11 @@ public class ProductoPrecioService {
     
     @Transactional(readOnly = true)
     public List<ProductoPrecioDTO> listarPreciosPorProducto(Long productoId) {
-        return precioRepository.findByProductoId(productoId) // Necesitarás este método en el Repository
+        // Validar que el producto existe
+        if (!productoRepository.existsById(productoId)) {
+            throw new EntityNotFoundException("Producto no encontrado");
+        }
+        return precioRepository.findAllByProductoId(productoId)
                 .stream()
                 .map(precioMapper::toDTO)
                 .collect(Collectors.toList());

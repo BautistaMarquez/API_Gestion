@@ -69,6 +69,12 @@ public VehiculoResponseDTO save(VehiculoRequestDTO dto) {
     }
 
     @Transactional
+    public java.util.List<VehiculoResponseDTO> listarDisponibles() {
+        java.util.List<Vehiculo> vehiculos = vehiculoRepository.findByEstado(EstadoVehiculo.DISPONIBLE);
+        return vehiculos.stream().map(mapper::toResponseDTO).toList();
+    }
+
+    @Transactional
     public VehiculoResponseDTO actualizarEstadoManual(Long id, EstadoVehiculo nuevoEstado) {
     Vehiculo vehiculo = vehiculoRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Vehículo no encontrado"));

@@ -20,6 +20,7 @@ import com.gestion.erp.modules.maestros.models.enums.*;
 import com.gestion.erp.modules.maestros.repositories.*;
 import com.gestion.erp.modules.maestros.services.ConductorService;
 import com.gestion.erp.modules.maestros.services.VehiculoService;
+import com.gestion.erp.modules.auth.repositories.UsuarioRepository;
 import com.gestion.erp.shared.util.SecurityUtils;
 
 import jakarta.persistence.criteria.JoinType;
@@ -37,6 +38,7 @@ public class ViajeService {
     private final ConductorService conductorService;
     private final ProductoRepository productoRepository;
     private final ProductoPrecioRepository precioRepository;
+    private final UsuarioRepository usuarioRepository;
     private final SecurityUtils securityUtils;
     
     // Repositorios y Mappers
@@ -60,11 +62,14 @@ public class ViajeService {
         // 1. Obtener recursos validados de otros servicios
         Vehiculo vehiculo = vehiculoService.obtenerParaViaje(request.vehiculoId());
         Conductor conductor = conductorService.validarYObtenerParaViaje(request.conductorId());
+        Usuario supervisor = usuarioRepository.findById(request.supervisorId())
+            .orElseThrow(() -> new EntityNotFoundException("Supervisor no encontrado"));
         
         // 2. Mapear y vincular
         Viaje viaje = viajeMapper.toEntity(request);
         viaje.setVehiculo(vehiculo);
         viaje.setConductor(conductor);
+        viaje.setSupervisor(supervisor);
         
         // 3. Snapshot de precios (Lógica de orquestación)
         procesarDetallesYPrecios(viaje, request);
@@ -116,19 +121,28 @@ public class ViajeService {
     }
 
     private void procesarDetallesYPrecios(Viaje viaje, ViajeRequestDTO request) {
-        for (int i = 0; i < viaje.getDetalles().size(); i++) {
-            ViajeDetalle detalle = viaje.getDetalles().get(i);
-            DetalleRequestDTO detDto = request.detalles().get(i);
-
+        // Crear cada detalle a partir del request
+        for (DetalleRequestDTO detDto : request.detalles()) {
+            // 1. Validar producto existe
             Producto producto = productoRepository.findById(detDto.productoId())
-                .orElseThrow(() -> new EntityNotFoundException("Producto no existe"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                    "Producto con ID " + detDto.productoId() + " no existe"));
             
+            // 2. Validar precio existe
             ProductoPrecio precio = precioRepository.findById(detDto.productoPrecioId())
-                .orElseThrow(() -> new EntityNotFoundException("Esquema de precio no válido"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                    "Esquema de precio con ID " + detDto.productoPrecioId() + " no válido"));
 
+            // 3. Crear nueva instancia de detalle
+            ViajeDetalle detalle = new ViajeDetalle();
             detalle.setViaje(viaje);
             detalle.setProducto(producto);
-            detalle.setPrecioAplicado(precio.getValor());
+            detalle.setCantidadInicial(detDto.cantidadInicial());
+            detalle.setPrecioAplicado(precio.getValor()); // Snapshot del precio
+            detalle.setVentaRealizada(BigDecimal.ZERO); // Se calcula al finalizar
+            
+            // 4. Agregar a la lista de detalles del viaje
+            viaje.getDetalles().add(detalle);
         }
     }
 

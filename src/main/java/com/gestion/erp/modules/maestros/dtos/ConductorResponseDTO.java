@@ -10,5 +10,8 @@ public record ConductorResponseDTO(
     String dni,
     EstadoConductor estado,
     LocalDate licenciaVencimiento,
-    String nombreEquipo // "Flattening": Aplanamos la relación para el frontend
+    String nombreEquipo, // "Flattening": Aplanamos la relación para el frontend
+    Long equipoId, // ID del equipo para validaciones
+    Long supervisorId, // ID del supervisor del equipo
+    String supervisorNombre // Nombre completo del supervisor
 ) {}

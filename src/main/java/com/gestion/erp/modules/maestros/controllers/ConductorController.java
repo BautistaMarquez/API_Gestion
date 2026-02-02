@@ -54,6 +54,13 @@ public class ConductorController {
         return ResponseEntity.ok(service.listarDisponibles());
     }
 
+    @GetMapping("/disponibles/con-equipo")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO', 'SUPERVISOR_PLANTA')")
+    @Operation(summary = "Listar conductores disponibles que pertenecen a un equipo (para iniciar viajes)")
+    public ResponseEntity<java.util.List<ConductorResponseDTO>> listarDisponiblesConEquipo() {
+        return ResponseEntity.ok(service.listarDisponiblesConEquipo());
+    }
+
     @PatchMapping("/{id}/estado")
     @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
     @Operation(summary = "Actualizar el estado de un conductor")

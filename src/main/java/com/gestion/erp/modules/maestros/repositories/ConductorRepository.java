@@ -14,4 +14,6 @@ public interface ConductorRepository extends JpaRepository<Conductor, Long> {
     boolean existsByDni(String dni);
     List<Conductor> findByEquipoId(Long equipoId);
     List<Conductor> findByEstadoAndEquipoIsNull(EstadoConductor estado);
+    // Listar conductores disponibles que pertenezcan a un equipo
+    List<Conductor> findByEstadoAndEquipoIsNotNull(EstadoConductor estado);
 }

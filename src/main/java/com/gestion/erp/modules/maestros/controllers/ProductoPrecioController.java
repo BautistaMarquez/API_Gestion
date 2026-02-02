@@ -21,7 +21,7 @@ public class ProductoPrecioController {
 
     
     @GetMapping("/producto/{productoId}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATIVO', 'TOTAL', 'ADMIN', 'SUPERVISOR_PLANTA')")
     @Operation(summary = "Listar precios por producto")
     public ResponseEntity<List<ProductoPrecioDTO>> listarPorProducto(@PathVariable Long productoId) {
         return ResponseEntity.ok(precioService.listarPreciosPorProducto(productoId));
