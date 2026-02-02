@@ -61,10 +61,33 @@ public class ProductoService {
      // 3. Persistir (el @Transactional se encarga del commit)
      productoRepository.save(producto);
     }
+    
+    /**
+     * Reactiva un producto previamente desactivado
+     * @param id ID del producto a reactivar
+     */
+    @Transactional
+    public void reactivarProducto(Long id) {
+        // Usar findByIdIncludingInactive para poder encontrar productos inactivos
+        Producto producto = productoRepository.findByIdIncludingInactive(id)
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con ID: " + id));
+        
+        producto.setActivo(true);
+        productoRepository.save(producto);
+    }
 
     public Page<ProductoResponseDTO> listarPaginado(Pageable pageable) {
         Page<Producto> productos = productoRepository.findAll(pageable);
         // La ventaja de Page es que tiene un método .map() muy potente
+        return productos.map(productoMapper::toResponseDTO);
+    }
+    
+    /**
+     * Método para gestión administrativa: Lista TODOS los productos (activos e inactivos)
+     * Ignora el @SQLRestriction aplicado en la entidad
+     */
+    public Page<ProductoResponseDTO> listarTodosIncludingInactive(Pageable pageable) {
+        Page<Producto> productos = productoRepository.findAllIncludingInactive(pageable);
         return productos.map(productoMapper::toResponseDTO);
     }
 }

@@ -47,6 +47,14 @@ public class ProductoController {
         productoService.eliminarLogico(id);
         return ResponseEntity.noContent().build(); // Devuelve 204
     }
+    
+    @PatchMapping("/{id}/reactivar")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL')")
+    @Operation(summary = "Reactivar un producto previamente desactivado")
+    public ResponseEntity<Void> reactivar(@PathVariable Long id) {
+        productoService.reactivarProducto(id);
+        return ResponseEntity.noContent().build();
+    }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO')")
@@ -54,5 +62,17 @@ public class ProductoController {
     public ResponseEntity<Page<ProductoResponseDTO>> listarPaginado(
         @ParameterObject Pageable pageable) { // @ParameterObject ayuda a Swagger a mostrar los campos
         return ResponseEntity.ok(productoService.listarPaginado(pageable));
+    }
+    
+    /**
+     * Endpoint específico para gestión administrativa
+     * Lista TODOS los productos (activos e inactivos) para permitir su administración
+     */
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TOTAL', 'ADMINISTRATIVO')")
+    @Operation(summary = "Listar TODOS los productos (activos e inactivos) para gestión")
+    public ResponseEntity<Page<ProductoResponseDTO>> listarTodosParaGestion(
+        @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(productoService.listarTodosIncludingInactive(pageable));
     }
 }
