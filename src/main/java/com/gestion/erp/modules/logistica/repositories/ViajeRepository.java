@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.gestion.erp.modules.logistica.dtos.DashboardDTO;
+import com.gestion.erp.modules.logistica.dtos.dashboard.DashboardDTO;
 import com.gestion.erp.modules.logistica.models.Viaje;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -20,7 +20,7 @@ public interface ViajeRepository extends JpaRepository<Viaje, Long>, JpaSpecific
     List<Viaje> findWithDetailsBySupervisorId(Long supervisorId);
 
     // Query para el ADMIN (Global)
-    @Query("SELECT new com.gestion.erp.modules.logistica.dtos.DashboardDTO(" +
+    @Query("SELECT new com.gestion.erp.modules.logistica.dtos.dashboard.DashboardDTO(" +
            "COUNT(v), " + // Devuelve Long -> DashboardDTO.totalViajes
            "SUM(CASE WHEN v.estado = 'EN_PROCESO' THEN 1L ELSE 0L END), " + // 1L/0L asegura Long -> DashboardDTO.viajesEnProceso
            "SUM(CASE WHEN v.estado = 'FINALIZADO' THEN 1L ELSE 0L END), " + // 1L/0L asegura Long -> DashboardDTO.viajesFinalizados
@@ -30,7 +30,7 @@ public interface ViajeRepository extends JpaRepository<Viaje, Long>, JpaSpecific
     DashboardDTO getGlobalStats();
 
     // Query para el SUPERVISOR (Filtrado)
-    @Query("SELECT new com.gestion.erp.modules.logistica.dtos.DashboardDTO(" +
+    @Query("SELECT new com.gestion.erp.modules.logistica.dtos.dashboard.DashboardDTO(" +
            "COUNT(v), " +
            "SUM(CASE WHEN v.estado = 'EN_PROCESO' THEN 1L ELSE 0L END), " +
            "SUM(CASE WHEN v.estado = 'FINALIZADO' THEN 1L ELSE 0L END), " +

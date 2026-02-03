@@ -1,32 +1,53 @@
 package com.gestion.erp.modules.logistica.services;
-import com.gestion.erp.modules.auth.models.Usuario;
-import com.gestion.erp.modules.logistica.dtos.DashboardDTO;
-import com.gestion.erp.modules.logistica.repositories.ViajeRepository;
-import com.gestion.erp.shared.util.SecurityUtils;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.stereotype.Service;
 
+import com.gestion.erp.modules.logistica.dtos.dashboard.*;
+import com.gestion.erp.modules.logistica.repositories.DashboardRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DashboardService {
-    private final ViajeRepository repository;
-    private final SecurityUtils securityUtils;
 
-    public DashboardDTO obtenerEstadisticas() {
-        Usuario usuario = securityUtils.getCurrentUser();
-        
-        // Si es ADMIN o TOTAL, ve la foto completa de la empresa
-        if (usuario.getRol().name().equals("ADMIN") || usuario.getRol().name().equals("TOTAL")) {
-            return repository.getGlobalStats();
-        }
-        
-        // Si es SUPERVISOR, ve solo el rendimiento de su equipo
-        if (usuario.getRol().name().equals("SUPERVISOR")) {
-            return repository.getStatsBySupervisor(usuario.getId());
-        }
+    private final DashboardRepository dashboardRepo;
 
-        throw new AccessDeniedException("Tu rol no tiene acceso a estadísticas");
+    public KpiStatsDTO getKpiStats(LocalDate from, LocalDate to, Long supervisorId) {
+        return dashboardRepo.getKpis(
+            from.atStartOfDay(), 
+            to.atTime(23, 59, 59), 
+            supervisorId
+        );
+    }
+
+    public List<VentaDiariaDTO> getVentasTrend(LocalDate from, LocalDate to, Long supervisorId) {
+        return dashboardRepo.getVentasTrend(
+            from.atStartOfDay(), 
+            to.atTime(23, 59, 59), 
+            supervisorId
+        );
+    }
+
+    public List<ProductoPerformanceDTO> getProductMix(LocalDate from, LocalDate to, Long supervisorId) {
+        return dashboardRepo.getProductMix(
+            from.atStartOfDay(), 
+            to.atTime(23, 59, 59), 
+            supervisorId
+        );
+    }
+
+    public Page<DetalleAuditoriaDTO> getAuditoriaReport(LocalDate from, LocalDate to, Long supervisorId, Pageable pageable) {
+        return dashboardRepo.getAuditoriaReport(
+            from.atStartOfDay(), 
+            to.atTime(23, 59, 59), 
+            supervisorId, 
+            pageable
+        );
     }
 }

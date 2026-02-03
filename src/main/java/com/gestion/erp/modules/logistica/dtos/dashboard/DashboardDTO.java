@@ -1,4 +1,4 @@
-package com.gestion.erp.modules.logistica.dtos;
+package com.gestion.erp.modules.logistica.dtos.dashboard;
 
 import java.math.BigDecimal;
 
