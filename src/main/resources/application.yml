@@ -30,4 +30,4 @@ application:
   security:
     jwt:
       secret-key: ${JWT_KEY}
-      expiration: 600  # 10 minutos
+      expiration: ${APPLICATION_SECURITY_JWT_EXPIRATION}
